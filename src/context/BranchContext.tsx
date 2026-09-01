@@ -21,9 +21,9 @@ export const BranchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(() => {
     const savedId = getItem<string | null>(BRANCH_STORAGE_KEY, null);
     if (savedId) {
-      return branches.find((b) => b.id === savedId) || null;
+      return branches.find((b) => b.id === savedId) || branches[0];
     }
-    return null;
+    return branches[0] || null;
   });
 
   const [branchInfoModalBranch, setBranchInfoModalBranch] = useState<Branch | null>(null);
@@ -33,14 +33,12 @@ export const BranchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (found) {
       setSelectedBranch(found);
       setItem(BRANCH_STORAGE_KEY, branchId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const changeBranch = () => {
-    setSelectedBranch(null);
+    setSelectedBranch(branches[0]);
     removeItem(BRANCH_STORAGE_KEY);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const openBranchInfoModal = (branch: Branch) => {

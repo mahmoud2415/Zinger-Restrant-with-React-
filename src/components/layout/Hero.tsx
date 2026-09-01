@@ -1,9 +1,6 @@
 import React from 'react';
-import { useBranch } from '../../context/BranchContext';
 
 export const Hero: React.FC = () => {
-  const { selectedBranch } = useBranch();
-
   return (
     <section className="px-margin-mobile mt-5">
       <div className="hero-card relative overflow-hidden rounded-[30px] p-4 sm:p-5">
@@ -60,13 +57,10 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* Branch line title */}
+      {/* Menu Section title */}
       <div id="menu-section" className="mt-4 text-right">
         <h2 className="text-lg font-black text-[#1c1b1b]">
-          منيو{' '}
-          <span className="text-primary">
-            {selectedBranch?.name || 'مطعم زنجر'}
-          </span>
+          منيو <span className="text-primary">مطعم زنجر</span>
         </h2>
       </div>
     </section>

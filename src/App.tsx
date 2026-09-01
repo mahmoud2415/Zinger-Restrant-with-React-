@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { BranchProvider, useBranch } from './context/BranchContext';
 import { CartProvider } from './context/CartContext';
 import { ModalProvider } from './context/ModalContext';
-import { BranchLanding } from './components/branch/BranchLanding';
 import { BranchInfoModal } from './components/branch/BranchInfoModal';
 import { Header } from './components/layout/Header';
 import { Hero } from './components/layout/Hero';
@@ -80,14 +79,7 @@ const MainAppContent: React.FC = () => {
     }
   }, []);
 
-  if (!selectedBranch) {
-    return (
-      <>
-        <BranchLanding />
-        <BranchInfoModal />
-      </>
-    );
-  }
+
 
   return (
     <div className="min-h-screen bg-surface text-on-surface transition-colors duration-300 overflow-x-hidden">

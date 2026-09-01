@@ -2,7 +2,7 @@ import React from 'react';
 import { useBranch } from '../../context/BranchContext';
 
 export const Footer: React.FC = () => {
-  const { selectedBranch, changeBranch, openBranchInfoModal } = useBranch();
+  const { branches, openBranchInfoModal } = useBranch();
 
   return (
     <footer className="bg-[#1A1A1A] text-white py-16 px-margin-mobile text-right">
@@ -19,70 +19,43 @@ export const Footer: React.FC = () => {
 
         <div>
           <h3 className="text-sm font-bold text-[#ffe16d] mb-4 uppercase">
-            الفرع النشط
+            فروعنا وعناويننا
           </h3>
-          {selectedBranch && (
-            <>
-              <a
-                href={selectedBranch.mapLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block group mb-3"
-              >
-                <p className="text-xs text-gray-300 font-bold mb-1 group-hover:text-primary transition-colors flex items-center gap-1">
+          <ul className="space-y-3">
+            {branches.map((b) => (
+              <li key={b.id} className="text-xs text-gray-300">
+                <button
+                  type="button"
+                  onClick={() => openBranchInfoModal(b)}
+                  className="font-bold text-white hover:text-primary transition-colors flex items-center gap-1 text-right"
+                >
                   <span className="material-symbols-outlined text-xs text-primary">
                     location_on
                   </span>
-                  <span>{selectedBranch.address}</span>
-                </p>
-                <span className="text-[10px] text-gray-500 underline group-hover:text-primary transition-colors">
-                  افتح في خرائط جوجل 🗺️
-                </span>
-              </a>
-              <p className="text-xs text-gray-400 flex items-center gap-1.5 mt-2">
-                <span className="material-symbols-outlined text-xs text-primary">
-                  phone
-                </span>
-                <span>
-                  رقم التوصيل:{' '}
-                  <a
-                    href={`tel:${selectedBranch.phone}`}
-                    className="font-numeric text-gray-300 hover:underline"
-                  >
-                    {selectedBranch.phone}
-                  </a>
-                </span>
-              </p>
-            </>
-          )}
+                  <span>{b.name}</span>
+                </button>
+                <p className="text-[11px] text-gray-400 pr-4 mt-0.5">{b.address}</p>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div>
           <h3 className="text-sm font-bold text-[#ffe16d] mb-4">روابط سريعة</h3>
           <ul className="space-y-2 text-xs text-gray-400">
             <li>
-              <button
-                type="button"
-                onClick={changeBranch}
-                className="hover:text-[#ffe16d] transition-colors"
-              >
-                تغيير الفرع المختـار
-              </button>
-            </li>
-            {selectedBranch && (
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openBranchInfoModal(selectedBranch)}
-                  className="hover:text-[#ffe16d] transition-colors"
-                >
-                  تفاصيل الفرع الحالي
-                </button>
-              </li>
-            )}
-            <li>
               <a href="#menu-section" className="hover:text-[#ffe16d] transition-colors">
                 تصفح أقسام المنيو
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://wa.me/201034456624"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#ffe16d] transition-colors"
+              >
+                تواصل معنا عبر واتساب
               </a>
             </li>
           </ul>
