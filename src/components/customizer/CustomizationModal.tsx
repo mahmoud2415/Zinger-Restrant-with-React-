@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useModal } from '../../context/ModalContext';
 import { useCart } from '../../context/CartContext';
-import { SizeOption, ExtraOption } from '../../types';
-import { commonExtras } from '../../data/extrasData';
+import { SizeOption } from '../../types';
 import { getItemImages } from '../../data/menuData';
 import { ImageCarousel } from './ImageCarousel';
 import { SizeSelector } from './SizeSelector';
 import { SpiceSelector } from './SpiceSelector';
-import { ExtrasSelector } from './ExtrasSelector';
 import { useSwipeToDismiss } from '../../hooks/useSwipeToDismiss';
 
 export const CustomizationModal: React.FC = () => {
@@ -16,7 +14,6 @@ export const CustomizationModal: React.FC = () => {
 
   const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
   const [spiceLevel, setSpiceLevel] = useState<string>('عادي');
-  const [selectedExtras, setSelectedExtras] = useState<ExtraOption[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
 
   // Initialize state when active item opens
@@ -30,7 +27,6 @@ export const CustomizationModal: React.FC = () => {
       }
       setSelectedSize(defaultSize);
       setSpiceLevel('عادي');
-      setSelectedExtras([]);
       setQuantity(1);
     }
   }, [activeCustomizingItem]);
@@ -45,29 +41,17 @@ export const CustomizationModal: React.FC = () => {
     return getItemImages(activeCustomizingItem);
   }, [activeCustomizingItem]);
 
-  const handleToggleExtra = (extra: ExtraOption) => {
-    setSelectedExtras((prev) => {
-      const exists = prev.some((e) => e.name === extra.name);
-      if (exists) {
-        return prev.filter((e) => e.name !== extra.name);
-      } else {
-        return [...prev, extra];
-      }
-    });
-  };
-
   const handleAdd = () => {
     if (!activeCustomizingItem || !selectedSize) return;
 
-    addToCart(activeCustomizingItem, selectedSize, spiceLevel, selectedExtras, quantity);
+    addToCart(activeCustomizingItem, selectedSize, spiceLevel, [], quantity);
     closeCustomizer();
     openCart();
   };
 
   if (!activeCustomizingItem) return null;
 
-  const extrasTotal = selectedExtras.reduce((sum, e) => sum + e.price, 0);
-  const unitPrice = (selectedSize?.price || 0) + extrasTotal;
+  const unitPrice = selectedSize?.price || 0;
   const totalPrice = unitPrice * quantity;
 
   // Check if item supports spice selection (burgers, crepes, rolls, etc.)
@@ -126,13 +110,6 @@ export const CustomizationModal: React.FC = () => {
             {showSpice && (
               <SpiceSelector spiceLevel={spiceLevel} onChangeSpice={setSpiceLevel} />
             )}
-
-            {/* Extras */}
-            <ExtrasSelector
-              extras={commonExtras}
-              selectedExtras={selectedExtras}
-              onToggleExtra={handleToggleExtra}
-            />
           </div>
 
           {/* Bottom Action Footer */}
