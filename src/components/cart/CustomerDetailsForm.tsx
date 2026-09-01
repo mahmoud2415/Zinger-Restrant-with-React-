@@ -8,8 +8,6 @@ interface CustomerDetailsFormProps {
   onUpdateCustomerInfo: (info: Partial<CustomerInfo>) => void;
   orderType: OrderType;
   onSelectOrderType: (type: OrderType) => void;
-  orderNote: string;
-  onChangeOrderNote: (note: string) => void;
 }
 
 export const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({
@@ -17,8 +15,6 @@ export const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({
   onUpdateCustomerInfo,
   orderType,
   onSelectOrderType,
-  orderNote,
-  onChangeOrderNote,
 }) => {
   const { branches, selectedBranch, selectBranch } = useBranch();
 
@@ -100,14 +96,6 @@ export const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({
           className="w-full p-3.5 bg-white border border-gray-200 rounded-2xl text-xs sm:text-sm text-[#1c1b1b] placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-right"
         />
       )}
-
-      <input
-        type="text"
-        value={orderNote}
-        onChange={(e) => onChangeOrderNote(e.target.value)}
-        placeholder="ملاحظات إضافية على الطلب (اختياري)..."
-        className="w-full p-3.5 bg-white border border-gray-200 rounded-2xl text-xs sm:text-sm text-[#1c1b1b] placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-right"
-      />
     </div>
   );
 };

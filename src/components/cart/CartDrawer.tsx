@@ -16,8 +16,6 @@ export const CartDrawer: React.FC = () => {
     updateCustomerInfo,
     orderType,
     setOrderType,
-    orderNote,
-    setOrderNote,
   } = useCart();
 
   if (!isCartOpen) return null;
@@ -91,8 +89,6 @@ export const CartDrawer: React.FC = () => {
                 onUpdateCustomerInfo={updateCustomerInfo}
                 orderType={orderType}
                 onSelectOrderType={setOrderType}
-                orderNote={orderNote}
-                onChangeOrderNote={setOrderNote}
               />
 
               {/* Summary & Checkout */}
