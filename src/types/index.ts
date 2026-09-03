@@ -1,47 +1,60 @@
 export interface Branch {
   id: string;
   name: string;
+  nameEn: string;
   phone: string;
   whatsapp: string;
   address: string;
   mapLink: string;
+  isOpen: boolean;
 }
 
 export interface Category {
   id: string;
-  name: string;
+  nameAr: string;
+  nameEn: string;
   icon: string;
 }
 
 export interface SizeOption {
-  name: string;
-  price: number;
-}
-
-export interface ExtraOption {
-  name: string;
+  nameAr: string;
+  nameEn: string;
   price: number;
 }
 
 export interface MenuItem {
-  id: number;
-  section: string;
-  name: string;
-  image?: string;
-  images?: string[];
-  desc?: string;
-  price?: number;
+  id: string;
+  category: string;
+  nameAr: string;
+  nameEn: string;
+  descAr: string;
+  basePrice: number;
+  image: string;
   sizes?: SizeOption[];
-  extras?: ExtraOption[];
   allowSpice?: boolean;
+  isAvailable: boolean;
+  badge?: 'HOT' | 'NEW' | 'BESTSELLER' | 'SUPER CRUNCHY' | 'CHEF PICK';
+  createdAt?: string | number;
+}
+
+export interface Deal {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  descAr: string;
+  badge: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  code?: string;
+  isActive: boolean;
 }
 
 export interface CartItem {
   cartItemId: string;
   item: MenuItem;
-  selectedSize: SizeOption;
-  spiceLevel: string;
-  selectedExtras: ExtraOption[];
+  selectedSize?: SizeOption;
+  spiceLevel?: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
@@ -53,4 +66,12 @@ export interface CustomerInfo {
   name: string;
   phone: string;
   address: string;
+  branchId: string;
+  note?: string;
 }
+
+export interface AdminUser {
+  email: string;
+  uid: string;
+}
+

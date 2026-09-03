@@ -4,47 +4,47 @@ export function buildWhatsAppMessage(
   cart: CartItem[],
   customer: CustomerInfo,
   orderType: OrderType,
-  branch: Branch | null,
-  note?: string
+  branch: Branch | null
 ): string {
-  const activeBranchName = branch ? branch.name : "غير محدد";
+  const branchName = branch ? branch.name : 'فرع غير محدد';
 
-  let msg = `*طلب جديد من موقع مطعم زنجر* 🍔\n\n`;
-  msg += `*الفرع:* ${activeBranchName}\n`;
-  msg += `*الاسم:* ${customer.name}\n`;
-  msg += `*رقم الجوال:* ${customer.phone}\n`;
-  msg += `*نوع الطلب:* ${orderType === "delivery" ? "توصيل للمنزل" : "استلام من الفرع"}\n`;
+  let msg = `*طلب جديد من موقع مطعم زنجر* 🍔🔥\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📍 *الفرع المختار:* ${branchName}\n`;
+  msg += `👤 *اسم العميل:* ${customer.name || 'عميل زنجر'}\n`;
+  msg += `📞 *رقم الجوال:* ${customer.phone}\n`;
+  msg += `🛵 *نوع الطلب:* ${orderType === 'delivery' ? 'توصيل للمنزل (Delivery)' : 'استلام من المطعم (Pickup)'}\n`;
 
-  if (orderType === "delivery" && customer.address) {
-    msg += `*العنوان:* ${customer.address}\n`;
+  if (orderType === 'delivery' && customer.address) {
+    msg += `🏠 *العنوان بالتفصيل:* ${customer.address}\n`;
   }
-  if (note && note.trim()) {
-    msg += `*ملاحظات:* ${note.trim()}\n`;
+  if (customer.note && customer.note.trim()) {
+    msg += `📝 *ملاحظات خاصة:* ${customer.note.trim()}\n`;
   }
 
-  msg += `\n*🧾 الطلبات:*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `*🧾 تفاصيل الوجبات والطلبات:*\n\n`;
 
   let subtotal = 0;
-  cart.forEach((item) => {
-    subtotal += item.totalPrice;
-    
-    let itemDesc = `• ${item.item.name}`;
-    if (item.selectedSize?.name) {
-      itemDesc += ` (${item.selectedSize.name})`;
+  cart.forEach((cartItem, idx) => {
+    subtotal += cartItem.totalPrice;
+
+    let itemLine = `${idx + 1}. *${cartItem.item.nameEn || cartItem.item.nameAr}* (${cartItem.item.nameAr})`;
+    if (cartItem.selectedSize) {
+      itemLine += `\n   ▫️ *الحجم:* ${cartItem.selectedSize.nameEn || cartItem.selectedSize.nameAr}`;
     }
-    if (item.spiceLevel) {
-      itemDesc += ` - ${item.spiceLevel}`;
+    if (cartItem.spiceLevel) {
+      itemLine += `\n   ▫️ *الشطة:* ${cartItem.spiceLevel}`;
     }
-    if (item.selectedExtras && item.selectedExtras.length > 0) {
-      const extrasStr = item.selectedExtras.map((e) => e.name).join(' + ');
-      itemDesc += ` [إضافات: ${extrasStr}]`;
-    }
-    itemDesc += ` x${item.quantity} = ${item.totalPrice} ج.م\n`;
-    msg += itemDesc;
+    itemLine += `\n   ▫️ *الكمية:* ${cartItem.quantity} × ${cartItem.unitPrice} ج.م = *${cartItem.totalPrice} ج.م*\n`;
+
+    msg += itemLine + '\n';
   });
 
-  msg += `\n*💰 الإجمالي:* ${subtotal} ج.م\n`;
-  msg += `\n*شكراً لاستخدامك موقع مطعم زنجر ❤️*`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `💰 *الإجمالي النهائي:* *${subtotal} جنيه مصري*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `شكراً لطلبك من مطعم زنجر! ❤️🍔\n_Zinger Cafe & Restaurant_`;
 
   return encodeURIComponent(msg);
 }
@@ -53,10 +53,9 @@ export function getWhatsAppLink(
   cart: CartItem[],
   customer: CustomerInfo,
   orderType: OrderType,
-  branch: Branch | null,
-  note?: string
+  branch: Branch | null
 ): string {
-  const branchWa = branch?.whatsapp || "201034456624";
-  const encodedMsg = buildWhatsAppMessage(cart, customer, orderType, branch, note);
-  return `https://wa.me/${branchWa}?text=${encodedMsg}`;
+  const branchWhatsApp = branch?.whatsapp || '201002552421';
+  const encodedMsg = buildWhatsAppMessage(cart, customer, orderType, branch);
+  return `https://wa.me/${branchWhatsApp}?text=${encodedMsg}`;
 }

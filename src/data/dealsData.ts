@@ -1,0 +1,40 @@
+import { Deal } from '../types';
+
+export const initialDeals: Deal[] = [
+  {
+    id: "deal-1",
+    titleEn: "MEGA ZINGER COMBO",
+    titleAr: "عرض ميجا زنجر كومبو",
+    descAr: "ساندوتش زنجر دبل سوبر كرانشي + بطاطس فارم فريتس + كانز بيبسي مثلج + صوص شيدر سايح",
+    badge: "SAVE 25%",
+    price: 165,
+    originalPrice: 220,
+    image: "/menu_items/zinger_combo.png",
+    code: "ZINGER25",
+    isActive: true,
+  },
+  {
+    id: "deal-2",
+    titleEn: "TRIPLE SMASH BURGER BOX",
+    titleAr: "بوكس التوفير تريبل برجر",
+    descAr: "3 ساندوتشات برجر لحم بلدي مشوي عالفحم مع صوص سموكي شيدر وخيار مخلل + لتر بيبسي",
+    badge: "BESTSELLER",
+    price: 290,
+    originalPrice: 370,
+    image: "/menu_items/burger_box.png",
+    code: "SMASH3",
+    isActive: true,
+  },
+  {
+    id: "deal-3",
+    titleEn: "DOUBLE CREPE DUO",
+    titleAr: "عرض دويتو الكريب",
+    descAr: "2 كريب حجم جامبو (1 كريب كرانشي دجاج + 1 كريب ميكس جبن ومشروم) + صوصات إضافية",
+    badge: "HOT OFFER 🔥",
+    price: 180,
+    originalPrice: 230,
+    image: "/menu_items/crepe_duo.png",
+    code: "CREPE2",
+    isActive: true,
+  },
+];

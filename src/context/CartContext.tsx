@@ -1,98 +1,96 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { CartItem, MenuItem, SizeOption, ExtraOption, OrderType, CustomerInfo } from '../types';
-import { getItem, setItem } from '../utils/storage';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { CartItem, MenuItem, SizeOption, Branch, OrderType, CustomerInfo } from '../types';
+import { branches } from '../data/branches';
 
 interface CartContextType {
   cart: CartItem[];
-  isCartOpen: boolean;
-  openCart: () => void;
-  closeCart: () => void;
-  toggleCart: () => void;
-  addToCart: (
-    item: MenuItem,
-    selectedSize: SizeOption,
-    spiceLevel: string,
-    selectedExtras: ExtraOption[],
-    quantity: number
-  ) => void;
-  updateQuantity: (cartItemId: string, delta: number) => void;
+  addToCart: (item: MenuItem, size?: SizeOption, spiceLevel?: string, quantity?: number) => void;
   removeFromCart: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
+  totalItemsCount: number;
   totalPrice: number;
-  totalItemCount: number;
+  selectedBranch: Branch;
+  setSelectedBranch: (branch: Branch) => void;
   orderType: OrderType;
   setOrderType: (type: OrderType) => void;
   customerInfo: CustomerInfo;
-  updateCustomerInfo: (info: Partial<CustomerInfo>) => void;
-  orderNote: string;
-  setOrderNote: (note: string) => void;
+  setCustomerInfo: React.Dispatch<React.SetStateAction<CustomerInfo>>;
 }
+
+const CART_STORAGE_KEY = 'zinger_cart_v2';
+const CUSTOMER_STORAGE_KEY = 'zinger_customer_v2';
+const BRANCH_STORAGE_KEY = 'zinger_selected_branch_v2';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_STORAGE_KEY = 'zinger_cart';
-const CUSTOMER_STORAGE_KEY = 'customer_info';
-
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
-    return getItem<CartItem[]>(CART_STORAGE_KEY, []);
+    try {
+      const saved = localStorage.getItem(CART_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
-  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const [selectedBranch, setSelectedBranchState] = useState<Branch>(() => {
+    try {
+      const savedId = localStorage.getItem(BRANCH_STORAGE_KEY);
+      const found = branches.find((b) => b.id === savedId);
+      return found || branches[0];
+    } catch {
+      return branches[0];
+    }
+  });
+
   const [orderType, setOrderType] = useState<OrderType>('delivery');
-  const [orderNote, setOrderNote] = useState<string>('');
 
-  const [customerInfo, setCustomerInfoState] = useState<CustomerInfo>(() => {
-    return getItem<CustomerInfo>(CUSTOMER_STORAGE_KEY, {
-      name: '',
-      phone: '',
-      address: '',
-    });
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
+    try {
+      const saved = localStorage.getItem(CUSTOMER_STORAGE_KEY);
+      return saved
+        ? JSON.parse(saved)
+        : { name: '', phone: '', address: '', branchId: branches[0].id, note: '' };
+    } catch {
+      return { name: '', phone: '', address: '', branchId: branches[0].id, note: '' };
+    }
   });
 
-  // Save cart changes
   useEffect(() => {
-    setItem(CART_STORAGE_KEY, cart);
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  // Save customer info changes
-  const updateCustomerInfo = (info: Partial<CustomerInfo>) => {
-    setCustomerInfoState((prev) => {
-      const updated = { ...prev, ...info };
-      setItem(CUSTOMER_STORAGE_KEY, updated);
-      return updated;
-    });
-  };
+  useEffect(() => {
+    localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(customerInfo));
+  }, [customerInfo]);
 
-  const openCart = () => setIsCartOpen(true);
-  const closeCart = () => setIsCartOpen(false);
-  const toggleCart = () => setIsCartOpen((prev) => !prev);
+  const setSelectedBranch = (branch: Branch) => {
+    setSelectedBranchState(branch);
+    setCustomerInfo((prev) => ({ ...prev, branchId: branch.id }));
+    localStorage.setItem(BRANCH_STORAGE_KEY, branch.id);
+  };
 
   const addToCart = (
     item: MenuItem,
-    selectedSize: SizeOption,
-    spiceLevel: string,
-    selectedExtras: ExtraOption[],
-    quantity: number
+    size?: SizeOption,
+    spiceLevel?: string,
+    quantity: number = 1
   ) => {
-    // Calculate unit price: size price + sum of extras
-    const extrasTotal = selectedExtras.reduce((sum, e) => sum + e.price, 0);
-    const unitPrice = selectedSize.price + extrasTotal;
+    const unitPrice = size ? size.price : item.basePrice;
+    const cartItemId = `${item.id}_${size?.nameEn || 'def'}_${spiceLevel || 'mild'}`;
 
-    // Generate unique ID based on item id, size name, spice level, and sorted extra names
-    const extrasKey = selectedExtras
-      .map((e) => e.name)
-      .sort()
-      .join('|');
-    const cartItemId = `${item.id}-${selectedSize.name}-${spiceLevel}-${extrasKey}`;
-
-    setCart((prevCart) => {
-      const existingIndex = prevCart.findIndex((c) => c.cartItemId === cartItemId);
-      if (existingIndex !== -1) {
-        const updated = [...prevCart];
-        const newQty = updated[existingIndex].quantity + quantity;
-        updated[existingIndex] = {
-          ...updated[existingIndex],
+    setCart((prev) => {
+      const existingIdx = prev.findIndex((ci) => ci.cartItemId === cartItemId);
+      if (existingIdx >= 0) {
+        const updated = [...prev];
+        const newQty = updated[existingIdx].quantity + quantity;
+        updated[existingIdx] = {
+          ...updated[existingIdx],
           quantity: newQty,
           totalPrice: newQty * unitPrice,
         };
@@ -101,73 +99,64 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newItem: CartItem = {
           cartItemId,
           item,
-          selectedSize,
+          selectedSize: size,
           spiceLevel,
-          selectedExtras,
           quantity,
           unitPrice,
           totalPrice: quantity * unitPrice,
         };
-        return [...prevCart, newItem];
+        return [...prev, newItem];
       }
     });
   };
 
-  const updateQuantity = (cartItemId: string, delta: number) => {
-    setCart((prevCart) => {
-      return prevCart
-        .map((c) => {
-          if (c.cartItemId === cartItemId) {
-            const newQty = c.quantity + delta;
-            if (newQty <= 0) return null;
-            return {
-              ...c,
-              quantity: newQty,
-              totalPrice: newQty * c.unitPrice,
-            };
-          }
-          return c;
-        })
-        .filter((c): c is CartItem => c !== null);
-    });
+  const removeFromCart = (cartItemId: string) => {
+    setCart((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
   };
 
-  const removeFromCart = (cartItemId: string) => {
-    setCart((prevCart) => prevCart.filter((c) => c.cartItemId !== cartItemId));
+  const updateQuantity = (cartItemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(cartItemId);
+      return;
+    }
+    setCart((prev) =>
+      prev.map((item) =>
+        item.cartItemId === cartItemId
+          ? {
+              ...item,
+              quantity,
+              totalPrice: quantity * item.unitPrice,
+            }
+          : item
+      )
+    );
   };
 
   const clearCart = () => {
     setCart([]);
   };
 
-  const totalPrice = useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  }, [cart]);
-
-  const totalItemCount = useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cart]);
+  const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
 
   return (
     <CartContext.Provider
       value={{
         cart,
-        isCartOpen,
-        openCart,
-        closeCart,
-        toggleCart,
         addToCart,
-        updateQuantity,
         removeFromCart,
+        updateQuantity,
         clearCart,
+        isCartOpen,
+        setIsCartOpen,
+        totalItemsCount,
         totalPrice,
-        totalItemCount,
+        selectedBranch,
+        setSelectedBranch,
         orderType,
         setOrderType,
         customerInfo,
-        updateCustomerInfo,
-        orderNote,
-        setOrderNote,
+        setCustomerInfo,
       }}
     >
       {children}
