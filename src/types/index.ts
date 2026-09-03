@@ -14,6 +14,8 @@ export interface Category {
   nameAr: string;
   nameEn: string;
   icon: string;
+  coverImage: string;
+  descAr?: string;
 }
 
 export interface SizeOption {

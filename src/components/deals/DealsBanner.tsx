@@ -1,145 +1,126 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Deal } from '../../types';
-import { ShoppingBag, Flame, Copy, Check } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
-import { useToast } from '../../context/ToastContext';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface DealsBannerProps {
   deals: Deal[];
+  onSelectDeal: (deal: Deal) => void;
 }
 
-export const DealsBanner: React.FC<DealsBannerProps> = ({ deals }) => {
-  const { addToCart } = useCart();
-  const { showToast } = useToast();
-  const [copiedCode, setCopiedCode] = React.useState<string | null>(null);
+export const DealsBanner: React.FC<DealsBannerProps> = ({ deals, onSelectDeal }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const activeDeals = deals.filter((d) => d.isActive);
 
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    if (activeDeals.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % activeDeals.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [activeDeals.length]);
+
   if (activeDeals.length === 0) return null;
 
-  const handleCopyCode = (code: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    showToast(`تم نسخ كود الخصم: ${code} 🎉`);
-    setTimeout(() => setCopiedCode(null), 2000);
+  const currentDeal = activeDeals[currentIndex] || activeDeals[0];
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % activeDeals.length);
   };
 
-  const handleOrderDeal = (deal: Deal) => {
-    // Convert deal to a cart item
-    addToCart(
-      {
-        id: deal.id,
-        category: 'deals',
-        nameEn: deal.titleEn,
-        nameAr: deal.titleAr,
-        descAr: deal.descAr,
-        basePrice: deal.price,
-        image: deal.image,
-        isAvailable: true,
-        badge: 'HOT',
-      },
-      undefined,
-      undefined,
-      1
-    );
-    showToast(`تمت إضافة ${deal.titleAr} إلى السلة! 🔥`);
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + activeDeals.length) % activeDeals.length);
+  };
+
+  // Touch Swipe Handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (diff > 45) {
+      handleNext();
+    } else if (diff < -45) {
+      handlePrev();
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   return (
-    <section className="py-4 px-4 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-zinger-yellow/10 border border-zinger-yellow/30 text-zinger-yellow">
-            <Flame className="w-5 h-5 fill-zinger-yellow" />
-          </div>
-          <div>
-            <h2 className="font-heading font-black text-lg text-white uppercase tracking-tight flex items-center gap-1.5">
-              EXCLUSIVE DEALS
-              <span className="text-xs px-2 py-0.5 rounded-full bg-zinger-yellow text-black font-bold">
-                LIMITED
-              </span>
-            </h2>
-            <p className="text-xs text-zinger-muted font-cairo">
-              أقوى عروض وبوكسات التوفير من مطعم زنجر
-            </p>
-          </div>
-        </div>
-      </div>
+    <section className="px-3 sm:px-4 pt-3 pb-2 max-w-7xl mx-auto">
+      {/* Pure Image Hero Banner Container */}
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onClick={() => onSelectDeal(currentDeal)}
+        className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:aspect-[24/9] rounded-3xl overflow-hidden bg-zinc-950 border border-zinger-border hover:border-zinger-yellow/60 transition-all shadow-card-dark cursor-pointer group select-none"
+      >
+        {/* Pure Banner Image */}
+        <img
+          key={currentDeal.id}
+          src={currentDeal.image}
+          alt={currentDeal.titleAr}
+          className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.02] animate-fade-in"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80';
+          }}
+        />
 
-      {/* Horizontal Carousel */}
-      <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
-        {activeDeals.map((deal) => (
-          <div
-            key={deal.id}
-            className="snap-start shrink-0 w-[88vw] sm:w-[420px] md:w-[460px] rounded-2xl bg-gradient-to-br from-zinc-900 via-zinger-card to-zinc-900 border border-zinger-border hover:border-zinger-yellow/50 transition-all p-4 relative overflow-hidden shadow-card-dark flex flex-col justify-between"
-          >
-            {/* Background Glow */}
-            <div className="absolute -top-12 -right-12 w-36 h-36 bg-zinger-yellow/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Carousel Navigation Arrows (Desktop / Hover only) */}
+        {activeDeals.length > 1 && (
+          <>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrev();
+              }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex z-20"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex z-20"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
 
-            <div>
-              {/* Header Badge */}
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="px-2.5 py-1 rounded-full bg-zinger-yellow text-black font-heading font-extrabold text-[11px] tracking-wider uppercase shadow-glow-yellow-sm">
-                  {deal.badge || 'HOT DEAL'}
-                </span>
-
-                {deal.code && (
-                  <button
-                    onClick={(e) => handleCopyCode(deal.code!, e)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800 border border-zinc-700 hover:border-zinger-yellow text-xs text-zinger-yellow font-mono transition-all"
-                  >
-                    {copiedCode === deal.code ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-zinger-green" />
-                        <span className="text-zinger-green">COPIED</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>{deal.code}</span>
-                      </>
-                    )}
-                  </button>
-                )}
-              </div>
-
-              {/* Title & Desc */}
-              <h3 className="font-heading font-black text-lg text-white uppercase tracking-tight mb-1">
-                {deal.titleEn}
-              </h3>
-              <h4 className="font-cairo font-bold text-sm text-zinger-yellow mb-1.5">
-                {deal.titleAr}
-              </h4>
-              <p className="text-xs text-zinc-400 font-cairo line-clamp-2 mb-4 leading-relaxed">
-                {deal.descAr}
-              </p>
-            </div>
-
-            {/* Bottom Row: Price & Action */}
-            <div className="flex items-center justify-between pt-3 border-t border-zinc-800/80">
-              <div className="flex items-baseline gap-2">
-                <span className="font-heading font-black text-2xl text-zinger-yellow">
-                  {deal.price}
-                </span>
-                <span className="text-xs font-bold text-zinger-muted font-cairo">ج.م</span>
-                {deal.originalPrice && (
-                  <span className="text-xs text-zinc-500 line-through">
-                    {deal.originalPrice} ج.م
-                  </span>
-                )}
-              </div>
-
+        {/* Dots Indicator at bottom center */}
+        {activeDeals.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+            {activeDeals.map((_, idx) => (
               <button
-                onClick={() => handleOrderDeal(deal)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-heading font-black text-xs uppercase tracking-wider transition-all shadow-glow-yellow-sm active:scale-95"
-              >
-                <ShoppingBag className="w-4 h-4" />
-                <span>ORDER DEAL</span>
-              </button>
-            </div>
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentIndex(idx);
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  idx === currentIndex
+                    ? 'w-6 bg-zinger-yellow shadow-glow-yellow-sm'
+                    : 'w-2 bg-white/40 hover:bg-white/70'
+                }`}
+              />
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </section>
   );

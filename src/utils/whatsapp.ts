@@ -8,10 +8,10 @@ export function buildWhatsAppMessage(
 ): string {
   const branchName = branch ? branch.name : 'فرع غير محدد';
 
-  let msg = `*طلب جديد من موقع مطعم زنجر* 🍔🔥\n`;
+  let msg = `*طلب جديد من موقع مطعم زينجر* 🍔🔥\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `📍 *الفرع المختار:* ${branchName}\n`;
-  msg += `👤 *اسم العميل:* ${customer.name || 'عميل زنجر'}\n`;
+  msg += `👤 *اسم العميل:* ${customer.name || 'عميل زينجر'}\n`;
   msg += `📞 *رقم الجوال:* ${customer.phone}\n`;
   msg += `🛵 *نوع الطلب:* ${orderType === 'delivery' ? 'توصيل للمنزل (Delivery)' : 'استلام من المطعم (Pickup)'}\n`;
 
@@ -44,7 +44,7 @@ export function buildWhatsAppMessage(
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `💰 *الإجمالي النهائي:* *${subtotal} جنيه مصري*\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  msg += `شكراً لطلبك من مطعم زنجر! ❤️🍔\n_Zinger Cafe & Restaurant_`;
+  msg += `شكراً لطلبك من مطعم زينجر! ❤️🍔\n_ZINGER Restaurant_`;
 
   return encodeURIComponent(msg);
 }

@@ -9,30 +9,62 @@ import { ToastProvider } from './context/ToastContext';
 // Components
 import { Navbar } from './components/layout/Navbar';
 import { DealsBanner } from './components/deals/DealsBanner';
-import { CategoryBar } from './components/menu/CategoryBar';
-import { FoodCard } from './components/menu/FoodCard';
-import { BottomSheetCustomizer } from './components/customizer/BottomSheetCustomizer';
-import { FloatingCartBar } from './components/cart/FloatingCartBar';
+import { CategoryGrid } from './components/category/CategoryGrid';
+import { FeaturedSection } from './components/menu/FeaturedSection';
+import { ProductPage } from './components/product/ProductPage';
+import { CategoryPage } from './components/category/CategoryPage';
+import { MiniCartButton } from './components/cart/MiniCartButton';
 import { CheckoutDrawer } from './components/cart/CheckoutDrawer';
+import { Footer } from './components/layout/Footer';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { Search } from 'lucide-react';
-import { branches } from './data/branches';
+
+type ViewState =
+  | { type: 'home' }
+  | { type: 'category'; categoryId: string }
+  | { type: 'product'; productId: string };
+
+function parseHash(): ViewState {
+  const hash = window.location.hash;
+  if (hash.startsWith('#/category/')) {
+    const categoryId = hash.replace('#/category/', '');
+    return { type: 'category', categoryId };
+  }
+  if (hash.startsWith('#/product/')) {
+    const productId = hash.replace('#/product/', '');
+    return { type: 'product', productId };
+  }
+  return { type: 'home' };
+}
 
 const MainApp: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
+  // Hash-based Page Navigation State (Synchronized with Phone Hardware Back Button)
+  const [currentView, setCurrentView] = useState<ViewState>(() => parseHash());
 
-  // Modals & Sheets
-  const [customizerItem, setCustomizerItem] = useState<MenuItem | null>(null);
+  // Admin Modals
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
 
-  // Real-time subscriptions with instant fallbacks
+  // Listen to Browser / Phone Hardware Back Button
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentView(parseHash());
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentView]);
+
+  // Real-time subscriptions
   useEffect(() => {
     const unsubMenu = subscribeToMenuItems((items) => setMenuItems(items));
     const unsubDeals = subscribeToDeals((d) => setDeals(d));
@@ -53,192 +85,125 @@ const MainApp: React.FC = () => {
     }
   };
 
-  // Filter items by category & search
-  const filteredItems = menuItems.filter((item) => {
-    const matchesCategory = activeCategory === 'all' || item.category === activeCategory;
-    const q = searchQuery.trim().toLowerCase();
-    const matchesSearch =
-      !q ||
-      item.nameEn.toLowerCase().includes(q) ||
-      item.nameAr.toLowerCase().includes(q) ||
-      item.descAr?.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q);
+  const navigateToHome = () => {
+    window.location.hash = '#/';
+  };
 
-    return matchesCategory && matchesSearch;
-  });
+  const navigateToCategory = (catId: string) => {
+    window.location.hash = `#/category/${catId}`;
+  };
 
-  // Group items by category if 'all' is selected and no search
-  const showGrouped = activeCategory === 'all' && !searchQuery.trim();
+  const navigateToProduct = (item: MenuItem) => {
+    window.location.hash = `#/product/${item.id}`;
+  };
 
+  const navigateToDeal = (deal: Deal) => {
+    window.location.hash = `#/product/${deal.id}`;
+  };
+
+  // Find active product if in product view
+  const activeProduct =
+    currentView.type === 'product'
+      ? menuItems.find((i) => i.id === currentView.productId) ||
+        deals
+          .filter((d) => d.id === currentView.productId)
+          .map((d) => ({
+            id: d.id,
+            category: 'deals',
+            nameEn: d.titleEn,
+            nameAr: d.titleAr,
+            descAr: d.descAr,
+            basePrice: d.price,
+            image: d.image,
+            isAvailable: true,
+            badge: 'HOT' as const,
+          }))[0]
+      : null;
+
+  // Find active category if in category view
+  const activeCategoryObj =
+    currentView.type === 'category'
+      ? categories.find((c) => c.id === currentView.categoryId)
+      : null;
+
+  const categoryItems =
+    currentView.type === 'category'
+      ? menuItems.filter((i) => i.category === currentView.categoryId)
+      : [];
+
+  // 1. DEDICATED PRODUCT PAGE VIEW
+  if (currentView.type === 'product' && activeProduct) {
+    return (
+      <div className="min-h-screen bg-zinger-bg text-white selection:bg-zinger-yellow selection:text-black">
+        <ProductPage
+          item={activeProduct}
+          onBack={() => {
+            if (window.history.length > 1) {
+              window.history.back();
+            } else {
+              navigateToHome();
+            }
+          }}
+        />
+        <MiniCartButton />
+        <CheckoutDrawer />
+      </div>
+    );
+  }
+
+  // 2. DEDICATED CATEGORY PAGE VIEW
+  if (currentView.type === 'category' && activeCategoryObj) {
+    return (
+      <div className="min-h-screen bg-zinger-bg text-white selection:bg-zinger-yellow selection:text-black">
+        <CategoryPage
+          category={activeCategoryObj}
+          categories={categories}
+          items={categoryItems}
+          onBack={() => navigateToHome()}
+          onSelectCategory={(catId) => navigateToCategory(catId)}
+          onOpenProduct={(it) => navigateToProduct(it)}
+        />
+        <MiniCartButton />
+        <CheckoutDrawer />
+      </div>
+    );
+  }
+
+  // 3. MAIN HOME SCREEN (Banner + Featured Picks + Category Covers Grid)
   return (
     <div className="min-h-screen bg-zinger-bg text-white flex flex-col selection:bg-zinger-yellow selection:text-black">
-      {/* 1. Header / Navbar */}
-      <Navbar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onOpenAdmin={handleOpenAdminPortal}
-      />
+      {/* 1. Header */}
+      <Navbar onOpenAdmin={handleOpenAdminPortal} />
 
-      {/* 2. Top Deals Carousel */}
-      {(!searchQuery.trim() && (activeCategory === 'all' || activeCategory === 'deals')) && (
-        <DealsBanner deals={deals} />
-      )}
+      {/* 2. Pure Visual Hero Banner Slider */}
+      <DealsBanner deals={deals} onSelectDeal={navigateToDeal} />
 
-      {/* 3. Sticky Category Navigation */}
-      <CategoryBar
-        categories={categories}
-        activeCategory={activeCategory}
-        onSelectCategory={(catId) => {
-          setActiveCategory(catId);
-          if (searchQuery) setSearchQuery('');
-        }}
-      />
+      {/* 3. Main Home Body */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 pb-28 space-y-10">
+        {/* Featured / Bestseller Picks Only */}
+        <FeaturedSection
+          items={menuItems}
+          onOpenProduct={(it) => navigateToProduct(it)}
+        />
 
-      {/* 4. Menu Items Section */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 pb-28">
-        {showGrouped ? (
-          // Grouped Display by Category
-          <div className="space-y-10">
-            {categories
-              .filter((cat) => cat.id !== 'deals')
-              .map((cat) => {
-                const categoryItems = menuItems.filter((i) => i.category === cat.id);
-                if (categoryItems.length === 0) return null;
-
-                return (
-                  <section key={cat.id} id={cat.id} className="scroll-mt-32 space-y-3">
-                    {/* Category Title Header */}
-                    <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-5 bg-zinger-yellow rounded-full inline-block shadow-glow-yellow-sm" />
-                        <h2 className="font-heading font-black text-lg sm:text-xl text-white uppercase tracking-tight">
-                          {cat.nameEn}
-                        </h2>
-                        <span className="text-xs sm:text-sm font-cairo text-zinger-yellow font-bold">
-                          ({cat.nameAr})
-                        </span>
-                      </div>
-
-                      <span className="text-xs font-mono font-bold text-zinc-500">
-                        {categoryItems.length} ITEMS
-                      </span>
-                    </div>
-
-                    {/* Food Items Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                      {categoryItems.map((item) => (
-                        <FoodCard
-                          key={item.id}
-                          item={item}
-                          onOpenCustomizer={(it) => setCustomizerItem(it)}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                );
-              })}
-          </div>
-        ) : (
-          // Filtered Grid (by selected category or search)
-          <div>
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-2 mb-4">
-              <h2 className="font-heading font-black text-base sm:text-lg text-white uppercase tracking-tight">
-                {searchQuery
-                  ? `SEARCH RESULTS FOR "${searchQuery.toUpperCase()}"`
-                  : categories.find((c) => c.id === activeCategory)?.nameEn || 'MENU ITEMS'}
-              </h2>
-              <span className="text-xs font-mono font-bold text-zinc-500">
-                {filteredItems.length} ITEMS FOUND
-              </span>
-            </div>
-
-            {filteredItems.length === 0 ? (
-              <div className="py-20 text-center space-y-3">
-                <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center mx-auto text-zinc-600">
-                  <Search className="w-6 h-6" />
-                </div>
-                <h3 className="font-heading font-bold text-base text-zinc-300 uppercase">
-                  NO MEALS FOUND
-                </h3>
-                <p className="text-xs text-zinc-500 font-cairo">
-                  لم نعثر على نتائج مطابقة لبحثك. جرب البحث باسم صنف آخر أو اختر من شريط التصنيفات.
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setActiveCategory('all');
-                  }}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinger-yellow font-heading font-bold text-xs uppercase"
-                >
-                  RESET FILTERS
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                {filteredItems.map((item) => (
-                  <FoodCard
-                    key={item.id}
-                    item={item}
-                    onOpenCustomizer={(it) => setCustomizerItem(it)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {/* Visual Category Covers Grid */}
+        <CategoryGrid
+          categories={categories}
+          menuItems={menuItems}
+          onSelectCategory={(catId) => navigateToCategory(catId)}
+        />
       </main>
 
-      {/* 5. Footer */}
-      <footer className="bg-zinger-surface border-t border-zinc-800/80 py-8 px-4 text-center space-y-6">
-        <div className="max-w-7xl mx-auto flex flex-col items-center space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-zinger-bg border border-zinger-yellow flex items-center justify-center">
-              <span className="font-heading font-black text-sm text-zinger-yellow italic">
-                Z
-              </span>
-            </div>
-            <span className="font-heading font-black text-lg text-white uppercase tracking-wider">
-              ZINGER GOURMET
-            </span>
-          </div>
+      {/* 4. Footer */}
+      <Footer />
 
-          <p className="text-xs text-zinc-400 font-cairo max-w-md mx-auto leading-relaxed">
-            أشهى ساندوتشات البرجر الفاخر، الكريب، البيتزا، وتش رول، والوجبات المقرمشة في فاقوس، أبو كبير، والإسماعيلية.
-          </p>
+      {/* 5. Compact Floating Mini Cart Button */}
+      <MiniCartButton />
 
-          {/* Branches list in footer */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-3xl pt-2">
-            {branches.map((b) => (
-              <div key={b.id} className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800/60 text-right">
-                <span className="font-cairo font-bold text-[11px] text-white block">
-                  {b.name}
-                </span>
-                <span className="font-mono text-[10px] text-zinc-400 block dir-ltr mt-0.5">
-                  {b.phone}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-[11px] text-zinc-600 font-mono pt-4">
-            © {new Date().getFullYear()} ZINGER CAFE & RESTAURANT. ALL RIGHTS RESERVED.
-          </p>
-        </div>
-      </footer>
-
-      {/* 6. Sticky Floating Cart Button */}
-      <FloatingCartBar />
-
-      {/* 7. Bottom Sheet Item Customizer */}
-      <BottomSheetCustomizer
-        item={customizerItem}
-        onClose={() => setCustomizerItem(null)}
-      />
-
-      {/* 8. Full Checkout Drawer (Branch Selector & 1-Click WhatsApp) */}
+      {/* 6. Full Checkout Drawer */}
       <CheckoutDrawer />
 
-      {/* 9. Admin Login Modal */}
+      {/* 7. Admin Login Modal */}
       <AdminLoginModal
         isOpen={isAdminLoginOpen}
         onClose={() => setIsAdminLoginOpen(false)}
@@ -248,7 +213,7 @@ const MainApp: React.FC = () => {
         }}
       />
 
-      {/* 10. Admin Fullscreen Dashboard */}
+      {/* 8. Admin Fullscreen Dashboard */}
       {isAdminDashboardOpen && adminUser && (
         <AdminDashboard
           admin={adminUser}

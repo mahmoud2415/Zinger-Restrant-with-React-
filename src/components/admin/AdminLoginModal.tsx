@@ -35,7 +35,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
     try {
       const admin = await loginAdmin(email, password);
-      showToast('مرحباً بك في لوحة تحكم مطعم زنجر! 👑');
+      showToast('مرحباً بك في لوحة تحكم مطعم زينجر! 👑');
       onLoginSuccess(admin);
       onClose();
     } catch (err: any) {
@@ -49,13 +49,13 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fade-in"
+        className="fixed inset-0 bg-black/85 backdrop-blur-sm animate-fade-in"
       />
 
-      <div className="relative w-full max-w-sm rounded-3xl bg-zinger-surface border border-zinger-border p-6 z-10 shadow-2xl animate-fade-in">
+      <div className="relative w-full max-w-sm rounded-3xl bg-zinc-950 border border-zinc-800 p-6 z-10 shadow-2xl animate-fade-in">
         <button
           onClick={onClose}
-          className="absolute top-4 left-4 p-2 rounded-full bg-zinc-800 text-zinc-400 hover:text-white"
+          className="absolute top-4 left-4 p-2 rounded-full bg-zinc-900 text-zinc-400 hover:text-white"
         >
           <X className="w-4 h-4" />
         </button>
@@ -66,10 +66,10 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             <Shield className="w-6 h-6" />
           </div>
           <h2 className="font-heading font-black text-xl text-white uppercase tracking-tight">
-            ADMIN PORTAL
+            ZINGER ADMIN
           </h2>
           <p className="text-xs text-zinc-400 font-cairo">
-            تسجيل دخول الإدارة لتعديل المنيو والعروض
+            تسجيل دخول إدارة مطعم زينجر
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 placeholder="admin@zinger.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-3 pr-9 py-2.5 rounded-xl bg-zinger-card border border-zinc-800 focus:border-zinger-yellow text-xs text-white placeholder-zinc-600 outline-none"
+                className="w-full pl-3 pr-9 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-zinger-yellow text-xs text-white placeholder-zinc-600 outline-none"
               />
             </div>
           </div>
@@ -108,7 +108,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-3 pr-9 py-2.5 rounded-xl bg-zinger-card border border-zinc-800 focus:border-zinger-yellow text-xs text-white placeholder-zinc-600 outline-none"
+                className="w-full pl-3 pr-9 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-zinger-yellow text-xs text-white placeholder-zinc-600 outline-none"
               />
             </div>
           </div>
@@ -116,18 +116,18 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-heading font-black text-xs uppercase tracking-wider transition-all shadow-glow-yellow flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-xs uppercase tracking-wider transition-all shadow-glow-yellow flex items-center justify-center gap-2 active:scale-95"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <span>LOGIN TO DASHBOARD</span>
+              <span>دخول لوحة التحكم</span>
             )}
           </button>
         </form>
 
         <p className="text-[10px] text-zinc-500 text-center font-cairo mt-4">
-          مخصص فقط لإدارة مطعم زنجر لتعديل المنتجات والأسعار والعروض
+          مخصص فقط لإدارة مطعم زينجر لتعديل الوجبات، الأسعار، والعروض
         </p>
       </div>
     </div>
