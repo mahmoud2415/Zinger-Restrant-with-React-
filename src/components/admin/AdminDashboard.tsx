@@ -130,20 +130,44 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('يرجى اختيار ملف صورة صالح', 'warning');
+      e.target.value = '';
+      return;
+    }
 
     setUploadingImage(true);
     try {
       const url = await uploadMealImage(file);
-      if (editingItem) {
-        setEditingItem({ ...editingItem, image: url });
-      } else if (editingDeal) {
-        setEditingDeal({ ...editingDeal, image: url });
-      }
+      setEditingItem((current) => (current ? { ...current, image: url } : current));
       showToast('تم رفع الصورة بنجاح! 📸');
     } catch {
       showToast('تعذر رفع الصورة، حاول اختيار ملف صورة آخر', 'warning');
     } finally {
       setUploadingImage(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleDealImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('يرجى اختيار ملف صورة صالح', 'warning');
+      e.target.value = '';
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const url = await uploadMealImage(file);
+      setEditingDeal((current) => (current ? { ...current, image: url, coverType: 'custom' } : current));
+      showToast('تم رفع غلاف العرض بنجاح! 📸');
+    } catch {
+      showToast('تعذر رفع غلاف العرض، حاول اختيار ملف صورة آخر', 'warning');
+    } finally {
+      setUploadingImage(false);
+      e.target.value = '';
     }
   };
 
@@ -197,7 +221,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       !editingDeal ||
       !editingDeal.titleAr ||
       !editingDeal.price ||
-      (editingDeal.coverType !== 'product' && !editingDeal.image)
+      !editingDeal.image
     ) {
       showToast('يرجى ملء جميع الحقول المطلوبة', 'warning');
       return;
@@ -834,7 +858,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     onClick={() => setEditingDeal({ ...editingDeal, coverType: 'product' })}
                     className={`py-2 rounded-xl border text-xs font-cairo font-bold ${editingDeal.coverType === 'product' ? 'border-zinger-yellow text-zinger-yellow bg-zinger-yellow/10' : 'border-zinc-700 text-zinc-400'}`}
                   >
-                    صورة منتج من المنيو
+                    ربط العرض بمنتج من المنيو
                   </button>
                   <button
                     type="button"
@@ -858,7 +882,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     }}
                     className="w-full mb-2 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo"
                   >
-                    <option value="">اختر المنتج المستخدم كغلاف</option>
+                    <option value="">اختر المنتج المرتبط بالعرض (اختياري)</option>
                     {menuItems.map((item) => (
                       <option key={item.id} value={item.id}>{item.nameAr}</option>
                     ))}
@@ -871,7 +895,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleImageUpload}
+                      onChange={handleDealImageUpload}
                       className="hidden"
                     />
                   </label>
