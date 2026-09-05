@@ -56,10 +56,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [editingItem, setEditingItem] = useState<Partial<MenuItem> | null>(null);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [savingItem, setSavingItem] = useState(false);
 
   // Edit / Add Deal State
   const [editingDeal, setEditingDeal] = useState<Partial<Deal> | null>(null);
   const [isDealModalOpen, setIsDealModalOpen] = useState(false);
+  const [savingDeal, setSavingDeal] = useState(false);
 
   // Filtered Menu Items
   const filteredItems = menuItems.filter((item) => {
@@ -117,6 +119,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
 
+    setSavingItem(true);
     try {
       await saveMenuItem(editingItem as MenuItem);
       showToast('تم حفظ وتحديث الوجبة بنجاح! 🔥');
@@ -124,6 +127,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setEditingItem(null);
     } catch {
       showToast('حدث خطأ أثناء حفظ الوجبة', 'warning');
+    } finally {
+      setSavingItem(false);
     }
   };
 
@@ -247,6 +252,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
 
+    setSavingDeal(true);
     try {
       await saveDeal(editingDeal as Deal);
       showToast('تم حفظ وتحديث العرض بنجاح! 🔥');
@@ -254,6 +260,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setEditingDeal(null);
     } catch {
       showToast('حدث خطأ أثناء حفظ العرض', 'warning');
+    } finally {
+      setSavingDeal(false);
     }
   };
 
@@ -769,9 +777,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="pt-3 border-t border-zinc-800">
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-sm tracking-wide transition-all shadow-glow-yellow active:scale-95"
+                  disabled={savingItem || uploadingImage}
+                  className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover disabled:opacity-60 disabled:cursor-not-allowed text-black font-cairo font-black text-sm tracking-wide transition-all shadow-glow-yellow active:scale-95"
                 >
-                  حفظ التعديلات في المنيو 🔥
+                  {savingItem ? 'جاري حفظ الوجبة...' : uploadingImage ? 'جاري رفع الصورة...' : 'حفظ التعديلات في المنيو 🔥'}
                 </button>
               </div>
             </form>
@@ -945,9 +954,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="pt-3 border-t border-zinc-800">
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-sm transition-all shadow-glow-yellow active:scale-95"
+                  disabled={savingDeal || uploadingImage}
+                  className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover disabled:opacity-60 disabled:cursor-not-allowed text-black font-cairo font-black text-sm transition-all shadow-glow-yellow active:scale-95"
                 >
-                  حفظ ونشر العرض 🔥
+                  {savingDeal ? 'جاري حفظ العرض...' : uploadingImage ? 'جاري رفع الغلاف...' : 'حفظ ونشر العرض 🔥'}
                 </button>
               </div>
             </form>
