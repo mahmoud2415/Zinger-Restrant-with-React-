@@ -125,8 +125,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       showToast('تم حفظ وتحديث الوجبة بنجاح! 🔥');
       setIsItemModalOpen(false);
       setEditingItem(null);
-    } catch {
-      showToast('حدث خطأ أثناء حفظ الوجبة', 'warning');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'فشل حفظ الوجبة على Firebase.', 'warning');
     } finally {
       setSavingItem(false);
     }
@@ -162,8 +162,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const url = await uploadMealImage(file);
       setEditingItem((current) => (current ? { ...current, image: url } : current));
       showToast('تم رفع الصورة بنجاح! 📸');
-    } catch {
-      showToast('تعذر رفع الصورة، حاول اختيار ملف صورة آخر', 'warning');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'فشل رفع الصورة إلى Firebase.', 'warning');
     } finally {
       setUploadingImage(false);
       e.target.value = '';
@@ -188,8 +188,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const url = await uploadMealImage(file);
       setEditingDeal((current) => (current ? { ...current, image: url, coverType: 'custom' } : current));
       showToast('تم رفع غلاف العرض بنجاح! 📸');
-    } catch {
-      showToast('تعذر رفع غلاف العرض، حاول اختيار ملف صورة آخر', 'warning');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'فشل رفع غلاف العرض إلى Firebase.', 'warning');
     } finally {
       setUploadingImage(false);
       e.target.value = '';
@@ -258,8 +258,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       showToast('تم حفظ وتحديث العرض بنجاح! 🔥');
       setIsDealModalOpen(false);
       setEditingDeal(null);
-    } catch {
-      showToast('حدث خطأ أثناء حفظ العرض', 'warning');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'فشل حفظ العرض على Firebase.', 'warning');
     } finally {
       setSavingDeal(false);
     }

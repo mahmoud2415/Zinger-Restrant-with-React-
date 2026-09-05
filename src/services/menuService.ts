@@ -142,7 +142,8 @@ export async function saveMenuItem(item: MenuItem): Promise<void> {
     const itemRef = doc(db, 'menu_items', item.id);
     await setDoc(itemRef, item, { merge: true });
   } catch (e) {
-    console.warn('Saved to local storage. Firestore sync failed or not configured yet:', e);
+    console.error('Menu item Firestore sync failed:', e);
+    throw new Error(getFirebaseErrorMessage(e, 'تعذر حفظ المنتج على Firebase'));
   }
 }
 
@@ -197,7 +198,8 @@ export async function saveDeal(deal: Deal): Promise<void> {
     const dealRef = doc(db, 'deals', deal.id);
     await setDoc(dealRef, deal, { merge: true });
   } catch (e) {
-    console.warn('Saved deal locally. Firestore sync pending:', e);
+    console.error('Deal Firestore sync failed:', e);
+    throw new Error(getFirebaseErrorMessage(e, 'تعذر حفظ العرض على Firebase'));
   }
 }
 
@@ -217,8 +219,25 @@ export async function deleteDeal(dealId: string): Promise<void> {
   }
 }
 
+function getFirebaseErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === 'object' && 'code' in error) {
+    const code = String(error.code);
+    if (code.includes('permission-denied') || code.includes('storage/unauthorized')) {
+      return 'ليس لديك صلاحية Firebase لرفع الصور أو حفظ البيانات. استخدم حساب الأدمن الحقيقي وتحقق من القواعد.';
+    }
+    if (code.includes('storage/bucket-not-found')) {
+      return 'مجلد Firebase Storage غير موجود أو اسم الـ bucket غير صحيح.';
+    }
+    if (code.includes('storage/quota-exceeded')) {
+      return 'تم تجاوز مساحة Firebase Storage المتاحة.';
+    }
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+}
+
 /**
- * Upload Image to Firebase Storage or Return Data URL
+ * Upload an image to Firebase Storage.
  */
 export async function uploadMealImage(file: File): Promise<string> {
   try {
@@ -228,13 +247,7 @@ export async function uploadMealImage(file: File): Promise<string> {
     const downloadUrl = await getDownloadURL(storageRef);
     return downloadUrl;
   } catch (e) {
-    console.warn('Firebase Storage upload failed, converting to local Base64/DataURL for immediate use:', e);
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    });
+    console.error('Firebase Storage upload failed:', e);
+    throw new Error(getFirebaseErrorMessage(e, 'تعذر رفع الصورة إلى Firebase Storage'));
   }
 }
