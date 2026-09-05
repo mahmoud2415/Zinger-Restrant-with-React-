@@ -141,7 +141,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
       showToast('تم رفع الصورة بنجاح! 📸');
     } catch {
-      showToast('تعذر رفع الصورة، يمكنك استخدام رابط صورة مباشر', 'warning');
+      showToast('تعذر رفع الصورة، حاول اختيار ملف صورة آخر', 'warning');
     } finally {
       setUploadingImage(false);
     }
@@ -178,7 +178,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       titleAr: 'عرض خاص جديد',
       descAr: 'تفاصيل العرض الحصري',
       price: 150,
-      image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80',
+      image: '',
       coverType: 'custom',
       badge: 'SPECIAL OFFER',
       isActive: true,
@@ -193,7 +193,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const handleSaveDeal = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingDeal || !editingDeal.titleAr || !editingDeal.price) {
+    if (
+      !editingDeal ||
+      !editingDeal.titleAr ||
+      !editingDeal.price ||
+      (editingDeal.coverType !== 'product' && !editingDeal.image)
+    ) {
       showToast('يرجى ملء جميع الحقول المطلوبة', 'warning');
       return;
     }
@@ -602,19 +607,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {/* Image Input & Upload */}
               <div>
                 <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                  صورة الوجبة (رابط مباشر أو رفع ملف)
+                  صورة الوجبة من جهازك
                 </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="https://... أو /assets/..."
-                    value={editingItem.image || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, image: e.target.value })}
-                    className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none dir-ltr text-right"
-                  />
+                <div className="flex items-center gap-3">
                   <label className="cursor-pointer px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-xs text-zinger-yellow font-cairo font-bold flex items-center gap-1.5 shrink-0">
                     <Upload className="w-3.5 h-3.5" />
-                    <span>{uploadingImage ? 'جاري الرفع...' : 'رفع صورة'}</span>
+                    <span>{uploadingImage ? 'جاري الرفع...' : 'اختيار صورة من الجهاز'}</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -623,6 +621,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       disabled={uploadingImage}
                     />
                   </label>
+                  {editingItem.image && (
+                    <img
+                      src={editingItem.image}
+                      alt="معاينة صورة الوجبة"
+                      className="w-16 h-12 rounded-lg object-cover border border-zinc-700"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -859,18 +864,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     ))}
                   </select>
                 )}
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    required={editingDeal.coverType !== 'product'}
-                    placeholder="رابط صورة البانر أو رفع ملف..."
-                    value={editingDeal.image || ''}
-                    onChange={(e) => setEditingDeal({ ...editingDeal, image: e.target.value })}
-                    className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white dir-ltr text-right"
-                  />
+                <div className="flex items-center gap-3">
                   <label className="cursor-pointer px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-xs text-zinger-yellow font-cairo font-bold flex items-center gap-1.5 shrink-0">
                     <Upload className="w-3.5 h-3.5" />
-                    <span>رفع</span>
+                    <span>اختيار غلاف من الجهاز</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -878,6 +875,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="hidden"
                     />
                   </label>
+                  {editingDeal.image && (
+                    <img
+                      src={editingDeal.image}
+                      alt="معاينة غلاف العرض"
+                      className="w-24 h-14 rounded-lg object-cover border border-zinc-700"
+                    />
+                  )}
                 </div>
               </div>
 
