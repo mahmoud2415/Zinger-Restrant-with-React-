@@ -127,6 +127,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  const readImageFile = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result);
+        } else {
+          reject(new Error('Image preview could not be created'));
+        }
+      };
+      reader.onerror = () => reject(reader.error || new Error('Image file could not be read'));
+      reader.readAsDataURL(file);
+    });
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -138,6 +152,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     setUploadingImage(true);
     try {
+      const previewUrl = await readImageFile(file);
+      setEditingItem((current) => (current ? { ...current, image: previewUrl } : current));
       const url = await uploadMealImage(file);
       setEditingItem((current) => (current ? { ...current, image: url } : current));
       showToast('تم رفع الصورة بنجاح! 📸');
@@ -160,6 +176,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     setUploadingImage(true);
     try {
+      const previewUrl = await readImageFile(file);
+      setEditingDeal((current) => (
+        current ? { ...current, image: previewUrl, coverType: 'custom' } : current
+      ));
       const url = await uploadMealImage(file);
       setEditingDeal((current) => (current ? { ...current, image: url, coverType: 'custom' } : current));
       showToast('تم رفع غلاف العرض بنجاح! 📸');
