@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MenuItem, Deal, AdminUser } from './types';
 import { categories } from './data/categories';
+import { getDealImage } from './data/dealsData';
 import { subscribeToMenuItems, subscribeToDeals } from './services/menuService';
 import { subscribeToAuth } from './services/authService';
 import { CartProvider } from './context/CartContext';
@@ -9,6 +10,7 @@ import { ToastProvider } from './context/ToastContext';
 // Components
 import { Navbar } from './components/layout/Navbar';
 import { DealsBanner } from './components/deals/DealsBanner';
+import { DealsPage } from './components/deals/DealsPage';
 import { CategoryGrid } from './components/category/CategoryGrid';
 import { FeaturedSection } from './components/menu/FeaturedSection';
 import { ProductPage } from './components/product/ProductPage';
@@ -22,7 +24,8 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 type ViewState =
   | { type: 'home' }
   | { type: 'category'; categoryId: string }
-  | { type: 'product'; productId: string };
+  | { type: 'product'; productId: string }
+  | { type: 'deals' };
 
 function parseHash(): ViewState {
   const hash = window.location.hash;
@@ -33,6 +36,9 @@ function parseHash(): ViewState {
   if (hash.startsWith('#/product/')) {
     const productId = hash.replace('#/product/', '');
     return { type: 'product', productId };
+  }
+  if (hash === '#/deals') {
+    return { type: 'deals' };
   }
   return { type: 'home' };
 }
@@ -101,6 +107,10 @@ const MainApp: React.FC = () => {
     window.location.hash = `#/product/${deal.id}`;
   };
 
+  const navigateToDeals = () => {
+    window.location.hash = '#/deals';
+  };
+
   // Find active product if in product view
   const activeProduct =
     currentView.type === 'product'
@@ -114,11 +124,22 @@ const MainApp: React.FC = () => {
             nameAr: d.titleAr,
             descAr: d.descAr,
             basePrice: d.price,
-            image: d.image,
+            image: getDealImage(d, menuItems),
             isAvailable: true,
             badge: 'HOT' as const,
           }))[0]
       : null;
+
+  if (currentView.type === 'deals') {
+    return (
+      <DealsPage
+        deals={deals}
+        menuItems={menuItems}
+        onBack={navigateToHome}
+        onSelectDeal={navigateToDeal}
+      />
+    );
+  }
 
   // Find active category if in category view
   const activeCategoryObj =
@@ -173,7 +194,7 @@ const MainApp: React.FC = () => {
   return (
     <div className="min-h-screen bg-zinger-bg text-white flex flex-col selection:bg-zinger-yellow selection:text-black">
       {/* 1. Header */}
-      <Navbar onOpenAdmin={handleOpenAdminPortal} />
+      <Navbar onOpenAdmin={handleOpenAdminPortal} onOpenDeals={navigateToDeals} />
 
       {/* 2. Pure Visual Hero Banner Slider */}
       <DealsBanner deals={deals} onSelectDeal={navigateToDeal} />

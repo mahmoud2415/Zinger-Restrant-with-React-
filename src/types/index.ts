@@ -48,6 +48,8 @@ export interface Deal {
   price: number;
   originalPrice?: number;
   image: string;
+  sourceProductId?: string;
+  coverType?: 'product' | 'custom';
   code?: string;
   isActive: boolean;
 }
@@ -76,4 +78,3 @@ export interface AdminUser {
   email: string;
   uid: string;
 }
-

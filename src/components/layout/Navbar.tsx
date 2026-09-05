@@ -1,13 +1,14 @@
 import React, { useRef } from 'react';
-import { Flame, Share2 } from 'lucide-react';
+import { Flame, Share2, Tag } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import { shareContent } from '../../utils/share';
 
 interface NavbarProps {
   onOpenAdmin: () => void;
+  onOpenDeals: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin, onOpenDeals }) => {
   const { showToast } = useToast();
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -72,6 +73,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
 
         {/* Share Button (Clean & Minimal Header) */}
         <div className="flex items-center gap-2">
+          <button
+            onClick={onOpenDeals}
+            title="العروض"
+            className="p-2.5 rounded-full bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-zinger-yellow transition-all active:scale-90 shadow-sm"
+          >
+            <Tag className="w-4 h-4" />
+          </button>
           <button
             onClick={handleShareApp}
             title="مشاركة الموقع"

@@ -179,6 +179,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       descAr: 'تفاصيل العرض الحصري',
       price: 150,
       image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80',
+      coverType: 'custom',
       badge: 'SPECIAL OFFER',
       isActive: true,
     });
@@ -449,7 +450,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 >
                   <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-black">
                     <img
-                      src={deal.image}
+                      src={deal.coverType === 'product' && deal.sourceProductId
+                        ? menuItems.find((item) => item.id === deal.sourceProductId)?.image || deal.image
+                        : deal.image}
                       alt={deal.titleAr}
                       className="w-full h-full object-cover"
                     />
@@ -763,27 +766,103 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                  سعر العرض (ج.م) *
+                <label className="text-[11px] font-heading font-bold text-zinc-300 block mb-1">
+                  DEAL TITLE (ENGLISH)
                 </label>
                 <input
-                  type="number"
-                  required
-                  min="1"
-                  value={editingDeal.price || ''}
-                  onChange={(e) => setEditingDeal({ ...editingDeal, price: Number(e.target.value) })}
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono"
+                  type="text"
+                  value={editingDeal.titleEn || ''}
+                  onChange={(e) => setEditingDeal({ ...editingDeal, titleEn: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white uppercase dir-ltr text-right"
                 />
               </div>
 
               <div>
                 <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                  صورة بانر العرض البصري *
+                  تفاصيل العرض
                 </label>
+                <textarea
+                  rows={3}
+                  value={editingDeal.descAr || ''}
+                  onChange={(e) => setEditingDeal({ ...editingDeal, descAr: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo resize-none"
+                />
+              </div>
+
+              <div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                      سعر العرض (ج.م) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      value={editingDeal.price || ''}
+                      onChange={(e) => setEditingDeal({ ...editingDeal, price: Number(e.target.value) })}
+                      className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                      السعر قبل الخصم
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={editingDeal.originalPrice || ''}
+                      onChange={(e) => setEditingDeal({ ...editingDeal, originalPrice: Number(e.target.value) || undefined })}
+                      className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                  غلاف العرض *
+                </label>
+                <div className="grid grid-cols-2 gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingDeal({ ...editingDeal, coverType: 'product' })}
+                    className={`py-2 rounded-xl border text-xs font-cairo font-bold ${editingDeal.coverType === 'product' ? 'border-zinger-yellow text-zinger-yellow bg-zinger-yellow/10' : 'border-zinc-700 text-zinc-400'}`}
+                  >
+                    صورة منتج من المنيو
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingDeal({ ...editingDeal, coverType: 'custom' })}
+                    className={`py-2 rounded-xl border text-xs font-cairo font-bold ${editingDeal.coverType !== 'product' ? 'border-zinger-yellow text-zinger-yellow bg-zinger-yellow/10' : 'border-zinc-700 text-zinc-400'}`}
+                  >
+                    غلاف مخصص
+                  </button>
+                </div>
+                {editingDeal.coverType === 'product' && (
+                  <select
+                    required
+                    value={editingDeal.sourceProductId || ''}
+                    onChange={(e) => {
+                      const product = menuItems.find((item) => item.id === e.target.value);
+                      setEditingDeal({
+                        ...editingDeal,
+                        sourceProductId: e.target.value,
+                        image: product?.image || editingDeal.image,
+                      });
+                    }}
+                    className="w-full mb-2 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo"
+                  >
+                    <option value="">اختر المنتج المستخدم كغلاف</option>
+                    {menuItems.map((item) => (
+                      <option key={item.id} value={item.id}>{item.nameAr}</option>
+                    ))}
+                  </select>
+                )}
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    required
+                    required={editingDeal.coverType !== 'product'}
                     placeholder="رابط صورة البانر أو رفع ملف..."
                     value={editingDeal.image || ''}
                     onChange={(e) => setEditingDeal({ ...editingDeal, image: e.target.value })}
