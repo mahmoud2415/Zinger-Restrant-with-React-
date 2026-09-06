@@ -39,7 +39,10 @@ export function getLocalMenuItems(): MenuItem[] {
   try {
     const saved = localStorage.getItem(MENU_STORAGE_KEY);
     if (saved) {
-      return JSON.parse(saved);
+      const items = JSON.parse(saved) as MenuItem[];
+      const demoItems = initialMenuItems.filter((item) => item.id.startsWith('demo-'));
+      const missingDemoItems = demoItems.filter((demoItem) => !items.some((item) => item.id === demoItem.id));
+      return missingDemoItems.length > 0 ? [...items, ...missingDemoItems] : items;
     }
   } catch (e) {
     console.warn('Error reading local menu items', e);
