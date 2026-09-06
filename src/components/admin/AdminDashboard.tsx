@@ -57,11 +57,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [savingItem, setSavingItem] = useState(false);
+  const [pendingItemImage, setPendingItemImage] = useState<File | null>(null);
 
   // Edit / Add Deal State
   const [editingDeal, setEditingDeal] = useState<Partial<Deal> | null>(null);
   const [isDealModalOpen, setIsDealModalOpen] = useState(false);
   const [savingDeal, setSavingDeal] = useState(false);
+  const [pendingDealImage, setPendingDealImage] = useState<File | null>(null);
 
   // Filtered Menu Items
   const filteredItems = menuItems.filter((item) => {
@@ -88,6 +90,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleOpenAddItem = () => {
+    setPendingItemImage(null);
     setEditingItem({
       id: `item-${Date.now()}`,
       category: categories[0]?.id || 'burgers',
@@ -108,6 +111,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleOpenEditItem = (item: MenuItem) => {
+    setPendingItemImage(null);
     setEditingItem({ ...item });
     setIsItemModalOpen(true);
   };
@@ -121,13 +125,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     setSavingItem(true);
     try {
-      await saveMenuItem(editingItem as MenuItem);
+      let itemToSave = editingItem as MenuItem;
+      if (pendingItemImage) {
+        setUploadingImage(true);
+        const imageUrl = await uploadMealImage(pendingItemImage);
+        itemToSave = { ...itemToSave, image: imageUrl };
+      }
+      await saveMenuItem(itemToSave);
       showToast('تم حفظ وتحديث الوجبة بنجاح! 🔥');
       setIsItemModalOpen(false);
       setEditingItem(null);
+      setPendingItemImage(null);
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'فشل حفظ الوجبة على Firebase.', 'warning');
     } finally {
+      setUploadingImage(false);
       setSavingItem(false);
     }
   };
@@ -155,17 +167,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
 
-    setUploadingImage(true);
     try {
       const previewUrl = await readImageFile(file);
       setEditingItem((current) => (current ? { ...current, image: previewUrl } : current));
-      const url = await uploadMealImage(file);
-      setEditingItem((current) => (current ? { ...current, image: url } : current));
-      showToast('تم رفع الصورة بنجاح! 📸');
+      setPendingItemImage(file);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'فشل رفع الصورة إلى Firebase.', 'warning');
+      showToast(error instanceof Error ? error.message : 'تعذر قراءة الصورة.', 'warning');
     } finally {
-      setUploadingImage(false);
       e.target.value = '';
     }
   };
@@ -179,19 +187,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
 
-    setUploadingImage(true);
     try {
       const previewUrl = await readImageFile(file);
       setEditingDeal((current) => (
         current ? { ...current, image: previewUrl, coverType: 'custom' } : current
       ));
-      const url = await uploadMealImage(file);
-      setEditingDeal((current) => (current ? { ...current, image: url, coverType: 'custom' } : current));
-      showToast('تم رفع غلاف العرض بنجاح! 📸');
+      setPendingDealImage(file);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'فشل رفع غلاف العرض إلى Firebase.', 'warning');
+      showToast(error instanceof Error ? error.message : 'تعذر قراءة غلاف العرض.', 'warning');
     } finally {
-      setUploadingImage(false);
       e.target.value = '';
     }
   };
@@ -221,6 +225,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Deals actions
   const handleOpenAddDeal = () => {
+    setPendingDealImage(null);
     setEditingDeal({
       id: `deal-${Date.now()}`,
       titleEn: 'NEW SPECIAL DEAL',
@@ -236,6 +241,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleOpenEditDeal = (deal: Deal) => {
+    setPendingDealImage(null);
     setEditingDeal({ ...deal });
     setIsDealModalOpen(true);
   };
@@ -254,13 +260,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     setSavingDeal(true);
     try {
-      await saveDeal(editingDeal as Deal);
+      let dealToSave = editingDeal as Deal;
+      if (pendingDealImage) {
+        setUploadingImage(true);
+        const imageUrl = await uploadMealImage(pendingDealImage);
+        dealToSave = { ...dealToSave, image: imageUrl, coverType: 'custom' };
+      }
+      await saveDeal(dealToSave);
       showToast('تم حفظ وتحديث العرض بنجاح! 🔥');
       setIsDealModalOpen(false);
       setEditingDeal(null);
+      setPendingDealImage(null);
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'فشل حفظ العرض على Firebase.', 'warning');
     } finally {
+      setUploadingImage(false);
       setSavingDeal(false);
     }
   };
