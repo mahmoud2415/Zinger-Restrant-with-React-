@@ -55,14 +55,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Edit / Add Item State
   const [editingItem, setEditingItem] = useState<Partial<MenuItem> | null>(null);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [savingItem, setSavingItem] = useState(false);
+  const [savingItemImage, setSavingItemImage] = useState(false);
   const [pendingItemImage, setPendingItemImage] = useState<File | null>(null);
 
   // Edit / Add Deal State
   const [editingDeal, setEditingDeal] = useState<Partial<Deal> | null>(null);
   const [isDealModalOpen, setIsDealModalOpen] = useState(false);
   const [savingDeal, setSavingDeal] = useState(false);
+  const [savingDealImage, setSavingDealImage] = useState(false);
   const [pendingDealImage, setPendingDealImage] = useState<File | null>(null);
 
   // Filtered Menu Items
@@ -127,7 +128,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     try {
       let itemToSave = editingItem as MenuItem;
       if (pendingItemImage) {
-        setUploadingImage(true);
+        setSavingItemImage(true);
         const imageUrl = await uploadMealImage(pendingItemImage);
         itemToSave = { ...itemToSave, image: imageUrl };
       }
@@ -139,7 +140,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'فشل حفظ الوجبة على Firebase.', 'warning');
     } finally {
-      setUploadingImage(false);
+      setSavingItemImage(false);
       setSavingItem(false);
     }
   };
@@ -262,7 +263,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     try {
       let dealToSave = editingDeal as Deal;
       if (pendingDealImage) {
-        setUploadingImage(true);
+        setSavingDealImage(true);
         const imageUrl = await uploadMealImage(pendingDealImage);
         dealToSave = { ...dealToSave, image: imageUrl, coverType: 'custom' };
       }
@@ -274,7 +275,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'فشل حفظ العرض على Firebase.', 'warning');
     } finally {
-      setUploadingImage(false);
+      setSavingDealImage(false);
       setSavingDeal(false);
     }
   };
@@ -678,13 +679,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="flex items-center gap-3">
                   <label className="cursor-pointer px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-xs text-zinger-yellow font-cairo font-bold flex items-center gap-1.5 shrink-0">
                     <Upload className="w-3.5 h-3.5" />
-                    <span>{uploadingImage ? 'جاري الرفع...' : 'اختيار صورة من الجهاز'}</span>
+                    <span>اختيار صورة من الجهاز</span>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
                       className="hidden"
-                      disabled={uploadingImage}
                     />
                   </label>
                   {editingItem.image && (
@@ -791,10 +791,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="pt-3 border-t border-zinc-800">
                 <button
                   type="submit"
-                  disabled={savingItem || uploadingImage}
+                  disabled={savingItem}
                   className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover disabled:opacity-60 disabled:cursor-not-allowed text-black font-cairo font-black text-sm tracking-wide transition-all shadow-glow-yellow active:scale-95"
                 >
-                  {savingItem ? 'جاري حفظ الوجبة...' : uploadingImage ? 'جاري رفع الصورة...' : 'حفظ التعديلات في المنيو 🔥'}
+                  {savingItemImage ? 'جاري رفع صورة الوجبة...' : savingItem ? 'جاري حفظ الوجبة...' : 'حفظ التعديلات في المنيو 🔥'}
                 </button>
               </div>
             </form>
@@ -968,10 +968,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="pt-3 border-t border-zinc-800">
                 <button
                   type="submit"
-                  disabled={savingDeal || uploadingImage}
+                  disabled={savingDeal}
                   className="w-full py-3 px-4 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover disabled:opacity-60 disabled:cursor-not-allowed text-black font-cairo font-black text-sm transition-all shadow-glow-yellow active:scale-95"
                 >
-                  {savingDeal ? 'جاري حفظ العرض...' : uploadingImage ? 'جاري رفع الغلاف...' : 'حفظ ونشر العرض 🔥'}
+                  {savingDealImage ? 'جاري رفع الغلاف...' : savingDeal ? 'جاري حفظ العرض...' : 'حفظ ونشر العرض 🔥'}
                 </button>
               </div>
             </form>

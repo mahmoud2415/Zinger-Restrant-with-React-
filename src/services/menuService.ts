@@ -14,6 +14,20 @@ import { initialDeals } from '../data/dealsData';
 
 const MENU_STORAGE_KEY = 'zinger_local_menu_items';
 const DEALS_STORAGE_KEY = 'zinger_local_deals';
+const FIREBASE_OPERATION_TIMEOUT = 30000;
+
+async function withFirebaseTimeout<T>(operation: Promise<T>, message: string): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(message)), FIREBASE_OPERATION_TIMEOUT);
+  });
+
+  try {
+    return await Promise.race([operation, timeout]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
 
 // Helper to get local data
 export function getLocalMenuItems(): MenuItem[] {
@@ -140,7 +154,10 @@ export async function saveMenuItem(item: MenuItem): Promise<void> {
   // Sync to Firestore
   try {
     const itemRef = doc(db, 'menu_items', item.id);
-    await setDoc(itemRef, item, { merge: true });
+    await withFirebaseTimeout(
+      setDoc(itemRef, item, { merge: true }),
+      'انتهت مهلة حفظ المنتج. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
+    );
   } catch (e) {
     console.error('Menu item Firestore sync failed:', e);
     throw new Error(getFirebaseErrorMessage(e, 'تعذر حفظ المنتج على Firebase'));
@@ -196,7 +213,10 @@ export async function saveDeal(deal: Deal): Promise<void> {
 
   try {
     const dealRef = doc(db, 'deals', deal.id);
-    await setDoc(dealRef, deal, { merge: true });
+    await withFirebaseTimeout(
+      setDoc(dealRef, deal, { merge: true }),
+      'انتهت مهلة حفظ العرض. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
+    );
   } catch (e) {
     console.error('Deal Firestore sync failed:', e);
     throw new Error(getFirebaseErrorMessage(e, 'تعذر حفظ العرض على Firebase'));
@@ -243,8 +263,14 @@ export async function uploadMealImage(file: File): Promise<string> {
   try {
     const filename = `meals/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
     const storageRef = ref(storage, filename);
-    await uploadBytes(storageRef, file);
-    const downloadUrl = await getDownloadURL(storageRef);
+    await withFirebaseTimeout(
+      uploadBytes(storageRef, file),
+      'انتهت مهلة رفع الصورة. تحقق من اتصال الإنترنت وصلاحيات Firebase Storage.',
+    );
+    const downloadUrl = await withFirebaseTimeout(
+      getDownloadURL(storageRef),
+      'انتهت مهلة الحصول على رابط الصورة من Firebase Storage.',
+    );
     return downloadUrl;
   } catch (e) {
     console.error('Firebase Storage upload failed:', e);
