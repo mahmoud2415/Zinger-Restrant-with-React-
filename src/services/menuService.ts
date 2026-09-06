@@ -95,8 +95,14 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
           snapshot.forEach((docSnap) => {
             items.push({ id: docSnap.id, ...(docSnap.data() as Omit<MenuItem, 'id'>) });
           });
-          saveLocalMenuItems(items);
-          callback(items);
+          const demoItems = initialMenuItems.filter((item) => item.id.startsWith('demo-'));
+          const remoteIds = new Set(items.map((item) => item.id));
+          const mergedItems = [
+            ...items,
+            ...demoItems.filter((demoItem) => !remoteIds.has(demoItem.id)),
+          ];
+          saveLocalMenuItems(mergedItems);
+          callback(mergedItems);
         }
       },
       (error) => {
