@@ -4,13 +4,13 @@ import { getAuth } from 'firebase/auth';
 
 // Production Firebase Configuration for Zinger Restrant
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyC5NGQQMp4bNzEuokFF7ZqApvNm5sa7mG4",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "zinger-restrant.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "zinger-restrant",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "zinger-restrant.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "427013338246",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:427013338246:web:8918921d8f6e68b2b90d07",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-N5K0V5Q97T"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDFbe0xLbSdwhmvGkMVPPfW8xw7ZAMnBxI",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "zinger-restaurant-prod.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "zinger-restaurant-prod",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "zinger-restaurant-prod.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "386612122707",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:386612122707:web:1ee229967cb6854a2fe2a6",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
 };
 
 // Initialize App
