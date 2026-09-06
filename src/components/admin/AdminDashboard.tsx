@@ -130,7 +130,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       if (pendingItemImage) {
         setSavingItemImage(true);
         const imageUrl = await uploadMealImage(pendingItemImage);
-        itemToSave = { ...itemToSave, image: imageUrl };
+        itemToSave = { ...itemToSave, image: imageUrl, images: [imageUrl] };
       }
       await saveMenuItem(itemToSave);
       showToast('تم حفظ وتحديث الوجبة بنجاح! 🔥');
@@ -265,7 +265,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       if (pendingDealImage) {
         setSavingDealImage(true);
         const imageUrl = await uploadMealImage(pendingDealImage);
-        dealToSave = { ...dealToSave, image: imageUrl, coverType: 'custom' };
+        dealToSave = { ...dealToSave, image: imageUrl, images: [imageUrl], coverType: 'custom' };
       }
       await saveDeal(dealToSave);
       showToast('تم حفظ وتحديث العرض بنجاح! 🔥');

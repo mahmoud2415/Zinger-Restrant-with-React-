@@ -6,8 +6,7 @@ import {
   deleteDoc, 
   updateDoc 
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from './firebase';
+import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
@@ -257,23 +256,41 @@ function getFirebaseErrorMessage(error: unknown, fallback: string): string {
 }
 
 /**
- * Upload an image to Firebase Storage.
+ * Compress a selected image and return it as a Firestore-safe Data URL.
  */
 export async function uploadMealImage(file: File): Promise<string> {
-  try {
-    const filename = `meals/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-    const storageRef = ref(storage, filename);
-    await withFirebaseTimeout(
-      uploadBytes(storageRef, file),
-      'انتهت مهلة رفع الصورة. تحقق من اتصال الإنترنت وصلاحيات Firebase Storage.',
-    );
-    const downloadUrl = await withFirebaseTimeout(
-      getDownloadURL(storageRef),
-      'انتهت مهلة الحصول على رابط الصورة من Firebase Storage.',
-    );
-    return downloadUrl;
-  } catch (e) {
-    console.error('Firebase Storage upload failed:', e);
-    throw new Error(getFirebaseErrorMessage(e, 'تعذر رفع الصورة إلى Firebase Storage'));
+  const dataUrl = await compressImageToDataUrl(file);
+  if (dataUrl.length > 900_000) {
+    throw new Error('الصورة كبيرة بعد الضغط. اختر صورة أصغر حجمًا.');
   }
+  return dataUrl;
+}
+
+function compressImageToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const maxDimension = 1200;
+      const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) {
+        reject(new Error('تعذر تجهيز الصورة للرفع'));
+        return;
+      }
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+      if (!dataUrl) reject(new Error('تعذر تحويل الصورة'));
+      else resolve(dataUrl);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('تعذر قراءة ملف الصورة'));
+    };
+    image.src = objectUrl;
+  });
 }

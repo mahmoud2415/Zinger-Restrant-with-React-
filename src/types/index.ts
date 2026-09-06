@@ -32,6 +32,7 @@ export interface MenuItem {
   descAr: string;
   basePrice: number;
   image: string;
+  images?: string[];
   sizes?: SizeOption[];
   allowSpice?: boolean;
   isAvailable: boolean;
@@ -48,6 +49,7 @@ export interface Deal {
   price: number;
   originalPrice?: number;
   image: string;
+  images?: string[];
   sourceProductId?: string;
   coverType?: 'product' | 'custom';
   code?: string;
