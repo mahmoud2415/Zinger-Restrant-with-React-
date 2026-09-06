@@ -15,6 +15,12 @@ const MENU_STORAGE_KEY = 'zinger_local_menu_items';
 const DEALS_STORAGE_KEY = 'zinger_local_deals';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
+function removeUndefined<T extends object>(value: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, fieldValue]) => fieldValue !== undefined),
+  ) as Partial<T>;
+}
+
 async function withFirebaseTimeout<T>(operation: Promise<T>, message: string): Promise<T> {
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<T>((_, reject) => {
@@ -154,7 +160,7 @@ export async function saveMenuItem(item: MenuItem): Promise<void> {
   try {
     const itemRef = doc(db, 'menu_items', item.id);
     await withFirebaseTimeout(
-      setDoc(itemRef, item, { merge: true }),
+      setDoc(itemRef, removeUndefined(item), { merge: true }),
       'انتهت مهلة حفظ المنتج. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
     );
   } catch (e) {
@@ -213,7 +219,7 @@ export async function saveDeal(deal: Deal): Promise<void> {
   try {
     const dealRef = doc(db, 'deals', deal.id);
     await withFirebaseTimeout(
-      setDoc(dealRef, deal, { merge: true }),
+      setDoc(dealRef, removeUndefined(deal), { merge: true }),
       'انتهت مهلة حفظ العرض. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
     );
   } catch (e) {
