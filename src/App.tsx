@@ -10,6 +10,7 @@ import { ToastProvider } from './context/ToastContext';
 // Components
 import { Navbar } from './components/layout/Navbar';
 import { DealsBanner } from './components/deals/DealsBanner';
+import { DealsShowcaseCard } from './components/deals/DealsShowcaseCard';
 import { DealsPage } from './components/deals/DealsPage';
 import { CategoryGrid } from './components/category/CategoryGrid';
 import { FeaturedSection } from './components/menu/FeaturedSection';
@@ -120,13 +121,14 @@ const MainApp: React.FC = () => {
           .map((d) => ({
             id: d.id,
             category: 'deals',
-            nameEn: d.titleEn,
             nameAr: d.titleAr,
             descAr: d.descAr,
             basePrice: d.price,
             image: getDealImage(d, menuItems),
-            isAvailable: true,
-            badge: 'HOT' as const,
+            sizes: d.sizes,
+            allowSpice: d.allowSpice ?? true,
+            isAvailable: d.isActive,
+            badge: (d.badge as any) || 'HOT',
           }))[0]
       : null;
 
@@ -136,6 +138,7 @@ const MainApp: React.FC = () => {
         deals={deals}
         menuItems={menuItems}
         onBack={navigateToHome}
+        onHome={navigateToHome}
         onSelectDeal={navigateToDeal}
       />
     );
@@ -165,6 +168,8 @@ const MainApp: React.FC = () => {
               navigateToHome();
             }
           }}
+          onHome={navigateToHome}
+          onOpenDeals={navigateToDeals}
         />
         <MiniCartButton />
         <CheckoutDrawer />
@@ -181,6 +186,8 @@ const MainApp: React.FC = () => {
           categories={categories}
           items={categoryItems}
           onBack={() => navigateToHome()}
+          onHome={navigateToHome}
+          onOpenDeals={navigateToDeals}
           onSelectCategory={(catId) => navigateToCategory(catId)}
           onOpenProduct={(it) => navigateToProduct(it)}
         />
@@ -197,10 +204,13 @@ const MainApp: React.FC = () => {
       <Navbar onOpenAdmin={handleOpenAdminPortal} onOpenDeals={navigateToDeals} />
 
       {/* 2. Pure Visual Hero Banner Slider */}
-      <DealsBanner deals={deals} onSelectDeal={navigateToDeal} />
+      <DealsBanner deals={deals} onOpenDeals={navigateToDeals} />
 
       {/* 3. Main Home Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 pb-28 space-y-10">
+        {/* Dedicated Deals Section Showcase Card */}
+        <DealsShowcaseCard deals={deals} onOpenDeals={navigateToDeals} />
+
         {/* Featured / Bestseller Picks Only */}
         <FeaturedSection
           items={menuItems}

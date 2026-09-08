@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { MenuItem, SizeOption } from '../../types';
 import { 
-  ArrowLeft, 
+  Home, 
+  Tag, 
   Share2, 
   Flame, 
   Sparkles, 
   Plus, 
   Minus, 
   ShoppingBag, 
-  Check, 
-  EyeOff 
+  Check 
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
@@ -18,17 +18,20 @@ import { shareContent } from '../../utils/share';
 interface ProductPageProps {
   item: MenuItem;
   onBack: () => void;
+  onHome: () => void;
+  onOpenDeals: () => void;
 }
 
 const SPICE_LEVELS = [
-  { id: 'عادي (Mild)', labelEn: 'MILD', labelAr: 'عادي (بدون شطة)' },
-  { id: 'سبايسي (Spicy 🔥)', labelEn: 'SPICY 🔥', labelAr: 'سبايسي حار' },
-  { id: 'حار نار (Fiery 🔥🔥)', labelEn: 'FIERY 🔥🔥', labelAr: 'حار نار إكسترا' },
+  { id: 'عادي (بدون شطة)', labelAr: 'عادي (بدون شطة)' },
+  { id: 'سبايسي حار 🔥', labelAr: 'سبايسي حار 🔥' },
+  { id: 'حار نار إكسترا 🔥🔥', labelAr: 'حار نار إكسترا 🔥🔥' },
 ];
 
 export const ProductPage: React.FC<ProductPageProps> = ({
   item,
-  onBack,
+  onHome,
+  onOpenDeals,
 }) => {
   const { addToCart } = useCart();
   const { showToast } = useToast();
@@ -36,7 +39,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   const [selectedSize, setSelectedSize] = useState<SizeOption | undefined>(
     item.sizes && item.sizes.length > 0 ? item.sizes[0] : undefined
   );
-  const [selectedSpice, setSelectedSpice] = useState<string>('عادي (Mild)');
+  const [selectedSpice, setSelectedSpice] = useState<string>('عادي (بدون شطة)');
   const [quantity, setQuantity] = useState(1);
   const [addedAnimation, setAddedAnimation] = useState(false);
 
@@ -44,7 +47,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   const totalPrice = unitPrice * quantity;
 
   const handleAddToCart = () => {
-    if (!item.isAvailable) return;
     addToCart(item, selectedSize, item.allowSpice ? selectedSpice : undefined, quantity);
     setAddedAnimation(true);
     showToast(`تمت إضافة ${item.nameAr} إلى السلة! 🔥`);
@@ -52,8 +54,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   };
 
   const handleShare = async () => {
-    const shareTitle = `${item.nameEn} | ${item.nameAr} من مطعم زينجر`;
-    const shareText = `شوف وجبة ${item.nameAr} من مطعم زينجر بسعر ${unitPrice} ج.م فقط! اطلبها أونلاين:`;
+    const shareTitle = `${item.nameAr} من مطعم زينجر`;
+    const shareText = `شوف ${item.nameAr} من مطعم زينجر بسعر ${unitPrice} ج.م فقط! اطلب الآن:`;
     const shareUrl = `${window.location.origin}${window.location.pathname}#/product/${item.id}`;
 
     const result = await shareContent({
@@ -63,30 +65,36 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     });
 
     if (result === 'copied') {
-      showToast('تم نسخ رابط الوجبة بنجاح! شاركه الآن 🔥');
+      showToast('تم نسخ الرابط بنجاح! شاركه الآن 🔥');
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinger-bg text-white pb-28 animate-fade-in">
+    <div className="min-h-screen bg-zinger-bg text-white pb-28 animate-fade-in" dir="rtl">
       {/* Top Floating Action Bar */}
-      <div className="sticky top-0 z-40 bg-zinger-bg/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-xs font-heading font-bold text-white transition-all active:scale-95"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>BACK TO MENU</span>
-        </button>
+      <div className="sticky top-0 z-40 bg-zinger-bg/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onHome}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-xs font-cairo font-bold text-white transition-all active:scale-95 shadow-sm"
+          >
+            <Home className="w-4 h-4 text-zinger-yellow" />
+            <span>الرئيسية</span>
+          </button>
 
-        <span className="font-heading font-bold text-xs uppercase text-zinc-400">
-          {item.category}
-        </span>
+          <button
+            onClick={onOpenDeals}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-xs font-cairo font-bold text-zinger-yellow transition-all active:scale-95 shadow-sm"
+          >
+            <Tag className="w-3.5 h-3.5" />
+            <span>العروض</span>
+          </button>
+        </div>
 
         <button
           onClick={handleShare}
           className="p-2 rounded-xl bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-zinger-yellow transition-all active:scale-95"
-          title="Share Meal"
+          title="مشاركة"
         >
           <Share2 className="w-4 h-4" />
         </button>
@@ -107,34 +115,23 @@ export const ProductPage: React.FC<ProductPageProps> = ({
           />
 
           {/* Badges on Image */}
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-            {item.badge ? (
-              <span className="px-3 py-1 rounded-full bg-zinger-yellow text-black font-heading font-black text-xs uppercase shadow-glow-yellow flex items-center gap-1">
+          {item.badge && (
+            <div className="absolute top-4 right-4 pointer-events-none">
+              <span className="px-3 py-1 rounded-full bg-zinger-yellow text-black font-cairo font-black text-xs shadow-glow-yellow flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 {item.badge}
               </span>
-            ) : (
-              <span />
-            )}
-
-            {!item.isAvailable && (
-              <span className="px-3 py-1 rounded-full bg-zinger-red text-white font-heading font-black text-xs uppercase">
-                OUT OF STOCK
-              </span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Product Details Header */}
         <div className="bg-zinger-card p-5 sm:p-6 rounded-3xl border border-zinc-800 space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h1 className="font-heading font-black text-2xl sm:text-3xl text-white uppercase tracking-tight">
-                {item.nameEn}
-              </h1>
-              <h2 className="font-cairo font-bold text-lg sm:text-xl text-zinger-yellow">
+              <h1 className="font-cairo font-black text-2xl sm:text-3xl text-white">
                 {item.nameAr}
-              </h2>
+              </h1>
             </div>
 
             <div className="flex items-baseline gap-1.5 self-start sm:self-auto">
@@ -155,22 +152,22 @@ export const ProductPage: React.FC<ProductPageProps> = ({
           )}
         </div>
 
-        {/* 1. Size & Weight Options */}
+        {/* 1. Size Options */}
         {item.sizes && item.sizes.length > 0 && (
           <div className="bg-zinger-card p-5 rounded-3xl border border-zinc-800 space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="font-heading font-black text-sm text-white uppercase tracking-wider">
-                CHOOSE SIZE / اختر الحجم والوزن
+              <h3 className="font-cairo font-black text-sm text-white">
+                اختر الحجم
               </h3>
               <span className="text-xs font-cairo font-bold text-zinger-yellow">مطلوب</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-              {item.sizes.map((size) => {
-                const isSelected = selectedSize?.nameEn === size.nameEn;
+              {item.sizes.map((size, idx) => {
+                const isSelected = selectedSize?.nameAr === size.nameAr;
                 return (
                   <button
-                    key={size.nameEn}
+                    key={idx}
                     type="button"
                     onClick={() => setSelectedSize(size)}
                     className={`p-3.5 rounded-2xl border text-right transition-all flex items-center justify-between ${
@@ -179,14 +176,9 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         : 'bg-zinc-900/80 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                     }`}
                   >
-                    <div>
-                      <span className="font-heading font-black text-xs uppercase block text-white">
-                        {size.nameEn}
-                      </span>
-                      <span className="font-cairo text-xs text-zinc-400 block">
-                        {size.nameAr}
-                      </span>
-                    </div>
+                    <span className="font-cairo font-bold text-sm text-white block">
+                      {size.nameAr}
+                    </span>
 
                     <span className="font-heading font-black text-sm text-zinger-yellow">
                       {size.price} ج.م
@@ -201,9 +193,9 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         {/* 2. Spice Level Selector */}
         {item.allowSpice && (
           <div className="bg-zinger-card p-5 rounded-3xl border border-zinc-800 space-y-3">
-            <h3 className="font-heading font-black text-sm text-white uppercase tracking-wider flex items-center gap-1.5">
+            <h3 className="font-cairo font-black text-sm text-white flex items-center gap-1.5">
               <Flame className="w-4 h-4 text-zinger-red" />
-              SPICE LEVEL / درجة الشطة
+              درجة الشطة
             </h3>
 
             <div className="grid grid-cols-3 gap-2.5">
@@ -220,10 +212,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         : 'bg-zinc-900/80 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                     }`}
                   >
-                    <span className="font-heading font-bold text-xs uppercase block">
-                      {spice.labelEn}
-                    </span>
-                    <span className="font-cairo text-[11px] block text-zinc-400 mt-0.5">
+                    <span className="font-cairo font-bold text-xs block text-white">
                       {spice.labelAr}
                     </span>
                   </button>
@@ -235,8 +224,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
         {/* 3. Quantity Selector */}
         <div className="bg-zinger-card p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
-          <span className="font-heading font-bold text-xs uppercase text-zinc-300">
-            QUANTITY / الكمية
+          <span className="font-cairo font-bold text-xs text-zinc-300">
+            الكمية المطلوبة
           </span>
 
           <div className="flex items-center gap-3 bg-zinc-900 border border-zinc-700 rounded-xl p-1">
@@ -258,26 +247,19 @@ export const ProductPage: React.FC<ProductPageProps> = ({
           </div>
         </div>
 
-        {/* 4. Compact Centered Order Button (Inline at bottom of scroll) */}
+        {/* 4. Compact Centered Order Button */}
         <div className="flex justify-center pt-3 pb-10">
-          {item.isAvailable ? (
-            <button
-              onClick={handleAddToCart}
-              className={`flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full font-heading font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-glow-yellow active:scale-95 w-full max-w-sm ${
-                addedAnimation
-                  ? 'bg-zinger-green text-black'
-                  : 'bg-zinger-yellow hover:bg-zinger-yellowHover text-black'
-              }`}
-            >
-              {addedAnimation ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
-              <span>{addedAnimation ? 'ADDED TO CART!' : `ADD TO CART (${totalPrice} EGP)`}</span>
-            </button>
-          ) : (
-            <div className="py-2.5 px-5 rounded-full bg-zinc-900 border border-zinc-800 text-center flex items-center justify-center gap-2 text-zinc-500 font-heading font-bold text-xs max-w-sm w-full">
-              <EyeOff className="w-4 h-4" />
-              <span>OUT OF STOCK</span>
-            </div>
-          )}
+          <button
+            onClick={handleAddToCart}
+            className={`flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full font-cairo font-black text-sm transition-all shadow-glow-yellow active:scale-95 w-full max-w-sm ${
+              addedAnimation
+                ? 'bg-zinger-green text-black'
+                : 'bg-zinger-yellow hover:bg-zinger-yellowHover text-black'
+            }`}
+          >
+            {addedAnimation ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
+            <span>{addedAnimation ? 'تمت الإضافة للسلة!' : `إضافة إلى السلة (${totalPrice} ج.م)`}</span>
+          </button>
         </div>
       </div>
     </div>

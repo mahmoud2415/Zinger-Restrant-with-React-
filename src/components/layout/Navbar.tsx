@@ -1,14 +1,14 @@
 import React, { useRef } from 'react';
-import { Flame, Share2, Tag } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import { shareContent } from '../../utils/share';
 
 interface NavbarProps {
   onOpenAdmin: () => void;
-  onOpenDeals: () => void;
+  onOpenDeals?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin, onOpenDeals }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
   const { showToast } = useToast();
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -60,30 +60,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin, onOpenDeals }) => {
             <h1 className="font-heading font-black text-2xl tracking-tight text-white uppercase">
               ZINGER
             </h1>
-            <p className="text-[11px] text-zinger-muted font-cairo font-medium flex items-center gap-1.5">
-              <span>مطعم زينجر</span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-zinger-yellow flex items-center gap-0.5 font-bold">
-                <Flame className="w-3 h-3 fill-zinger-yellow text-zinger-yellow" />
-                أصلي وطازة
-              </span>
+            <p className="text-[11px] text-zinger-muted font-cairo font-medium">
+              مطعم زينجر
             </p>
           </div>
         </div>
 
-        {/* Share Button (Clean & Minimal Header) */}
+        {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenDeals}
-            title="العروض"
-            className="p-2.5 rounded-full bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-zinger-yellow transition-all active:scale-90 shadow-sm"
-          >
-            <Tag className="w-4 h-4" />
-          </button>
           <button
             onClick={handleShareApp}
             title="مشاركة الموقع"
-            className="p-2.5 rounded-full bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-zinger-yellow transition-all active:scale-90 shadow-sm"
+            className="p-2 rounded-full bg-zinger-card hover:bg-zinc-800 border border-zinc-700 text-zinger-yellow transition-all active:scale-90 shadow-sm"
           >
             <Share2 className="w-4 h-4" />
           </button>

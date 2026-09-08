@@ -20,7 +20,7 @@ export interface Category {
 
 export interface SizeOption {
   nameAr: string;
-  nameEn: string;
+  nameEn?: string;
   price: number;
 }
 
@@ -28,7 +28,7 @@ export interface MenuItem {
   id: string;
   category: string;
   nameAr: string;
-  nameEn: string;
+  nameEn?: string;
   descAr: string;
   basePrice: number;
   image: string;
@@ -42,14 +42,17 @@ export interface MenuItem {
 
 export interface Deal {
   id: string;
-  titleEn: string;
   titleAr: string;
+  titleEn?: string;
   descAr: string;
-  badge: string;
+  badge?: string;
   price: number;
   originalPrice?: number;
   image: string;
   images?: string[];
+  sizes?: SizeOption[];
+  allowSpice?: boolean;
+  showInBanner?: boolean;
   sourceProductId?: string;
   coverType?: 'product' | 'custom';
   code?: string;

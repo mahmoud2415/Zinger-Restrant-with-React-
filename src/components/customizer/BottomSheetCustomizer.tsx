@@ -10,9 +10,9 @@ interface BottomSheetCustomizerProps {
 }
 
 const SPICE_LEVELS = [
-  { id: 'عادي (Mild)', labelEn: 'MILD', labelAr: 'عادي (بدون شطة)', icon: null },
-  { id: 'سبايسي (Spicy 🔥)', labelEn: 'SPICY 🔥', labelAr: 'سبايسي حار', icon: '🔥' },
-  { id: 'حار نار (Fiery 🔥🔥)', labelEn: 'FIERY 🔥🔥', labelAr: 'حار نار إكسترا', icon: '🔥🔥' },
+  { id: 'عادي (بدون شطة)', labelAr: 'عادي (بدون شطة)', icon: null },
+  { id: 'سبايسي حار 🔥', labelAr: 'سبايسي حار', icon: '🔥' },
+  { id: 'حار نار إكسترا 🔥🔥', labelAr: 'حار نار إكسترا', icon: '🔥🔥' },
 ];
 
 export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
@@ -23,7 +23,7 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
   const { showToast } = useToast();
 
   const [selectedSize, setSelectedSize] = useState<SizeOption | undefined>(undefined);
-  const [selectedSpice, setSelectedSpice] = useState<string>('عادي (Mild)');
+  const [selectedSpice, setSelectedSpice] = useState<string>('عادي (بدون شطة)');
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
       } else {
         setSelectedSize(undefined);
       }
-      setSelectedSpice('عادي (Mild)');
+      setSelectedSpice('عادي (بدون شطة)');
       setQuantity(1);
     }
   }, [item]);
@@ -50,8 +50,8 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
   };
 
   const handleShare = async () => {
-    const shareTitle = `${item.nameEn} | ${item.nameAr} من مطعم زنجر`;
-    const shareText = `شوف وجبة ${item.nameAr} من مطعم زنجر بسعر ${currentUnitPrice} ج.م!`;
+    const shareTitle = `${item.nameAr} من مطعم زينجر`;
+    const shareText = `شوف ${item.nameAr} من مطعم زينجر بسعر ${currentUnitPrice} ج.م!`;
     const shareUrl = window.location.href;
 
     if (navigator.share) {
@@ -71,7 +71,7 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4" dir="rtl">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -115,12 +115,9 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
 
           {/* Title on image bottom */}
           <div className="absolute bottom-3 right-4 left-4">
-            <h2 className="font-heading font-black text-xl sm:text-2xl text-white uppercase tracking-tight">
-              {item.nameEn}
-            </h2>
-            <h3 className="font-cairo font-bold text-base text-zinger-yellow">
+            <h2 className="font-cairo font-black text-xl sm:text-2xl text-white">
               {item.nameAr}
-            </h3>
+            </h2>
           </div>
         </div>
 
@@ -136,18 +133,18 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
           {item.sizes && item.sizes.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-2.5">
-                <label className="font-heading font-black text-xs sm:text-sm text-white uppercase tracking-wider">
-                  SELECT SIZE / الحجم
+                <label className="font-cairo font-black text-xs sm:text-sm text-white">
+                  اختر الحجم
                 </label>
                 <span className="text-[11px] font-bold text-zinger-yellow font-cairo">مطلوب</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {item.sizes.map((size) => {
-                  const isSelected = selectedSize?.nameEn === size.nameEn;
+                {item.sizes.map((size, idx) => {
+                  const isSelected = selectedSize?.nameAr === size.nameAr;
                   return (
                     <button
-                      key={size.nameEn}
+                      key={idx}
                       onClick={() => setSelectedSize(size)}
                       className={`flex items-center justify-between p-3 rounded-xl border text-right transition-all duration-200 ${
                         isSelected
@@ -163,14 +160,9 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
                         >
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
                         </div>
-                        <div>
-                          <span className="font-heading font-bold text-xs uppercase block">
-                            {size.nameEn}
-                          </span>
-                          <span className="font-cairo text-xs text-zinc-400 block">
-                            {size.nameAr}
-                          </span>
-                        </div>
+                        <span className="font-cairo font-bold text-xs text-white block">
+                          {size.nameAr}
+                        </span>
                       </div>
 
                       <span className="font-heading font-black text-sm text-zinger-yellow">
@@ -187,9 +179,9 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
           {item.allowSpice && (
             <div>
               <div className="flex items-center justify-between mb-2.5">
-                <label className="font-heading font-black text-xs sm:text-sm text-white uppercase tracking-wider flex items-center gap-1.5">
+                <label className="font-cairo font-black text-xs sm:text-sm text-white flex items-center gap-1.5">
                   <Flame className="w-4 h-4 text-zinger-red" />
-                  SPICE LEVEL / درجة الشطة
+                  درجة الشطة
                 </label>
               </div>
 
@@ -206,10 +198,7 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
                           : 'bg-zinger-card border-zinc-800 hover:border-zinc-700 text-zinc-400'
                       }`}
                     >
-                      <span className="font-heading font-bold text-xs uppercase block">
-                        {spice.labelEn}
-                      </span>
-                      <span className="font-cairo text-[11px] block mt-0.5">
+                      <span className="font-cairo font-bold text-xs block">
                         {spice.labelAr}
                       </span>
                     </button>
@@ -221,8 +210,8 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
 
           {/* Quantity Selector */}
           <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
-            <span className="font-heading font-bold text-xs uppercase text-zinc-300">
-              QUANTITY / الكمية
+            <span className="font-cairo font-bold text-xs text-zinc-300">
+              الكمية
             </span>
 
             <div className="flex items-center gap-3 bg-zinger-card border border-zinc-700 rounded-xl p-1">
@@ -249,11 +238,11 @@ export const BottomSheetCustomizer: React.FC<BottomSheetCustomizerProps> = ({
         <div className="p-4 bg-zinger-surface border-t border-zinger-border pb-safe">
           <button
             onClick={handleAddToCart}
-            className="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-heading font-black text-sm uppercase tracking-wider transition-all shadow-glow-yellow active:scale-[0.98]"
+            className="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-sm transition-all shadow-glow-yellow active:scale-[0.98]"
           >
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5" />
-              <span>ADD TO CART</span>
+              <span>إضافة إلى السلة</span>
             </div>
             <span className="font-heading font-black text-base">
               {currentTotalPrice} ج.م

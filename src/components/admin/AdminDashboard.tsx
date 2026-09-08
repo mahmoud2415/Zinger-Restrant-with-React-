@@ -11,8 +11,6 @@ import {
   Plus, 
   Edit3, 
   Trash2, 
-  Eye, 
-  EyeOff, 
   Sparkles, 
   Search, 
   Upload, 
@@ -23,7 +21,6 @@ import {
 import { 
   saveMenuItem, 
   deleteMenuItem, 
-  toggleItemAvailability, 
   saveDeal, 
   deleteDeal, 
   uploadMealImage 
@@ -72,16 +69,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const q = searchQuery.toLowerCase();
     const matchSearch =
       !searchQuery ||
-      item.nameEn.toLowerCase().includes(q) ||
       item.nameAr.toLowerCase().includes(q) ||
+      (item.nameEn && item.nameEn.toLowerCase().includes(q)) ||
       item.descAr?.toLowerCase().includes(q);
     return matchCat && matchSearch;
   });
-
-  const handleToggleStock = async (itemId: string, currentStatus: boolean) => {
-    await toggleItemAvailability(itemId, !currentStatus);
-    showToast(`تم ${!currentStatus ? 'تفعيل توفر' : 'إلغاء توفر'} الوجبة في المنيو!`);
-  };
 
   const handleDeleteItem = async (itemId: string, name: string) => {
     if (window.confirm(`هل أنت متأكد من حذف وجبة "${name}" نهائياً من المنيو؟`)) {
@@ -95,7 +87,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setEditingItem({
       id: `item-${Date.now()}`,
       category: categories[0]?.id || 'burgers',
-      nameEn: '',
       nameAr: '',
       descAr: '',
       basePrice: 100,
@@ -104,8 +95,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       allowSpice: true,
       badge: undefined,
       sizes: [
-        { nameEn: 'Single', nameAr: 'سنجل', price: 100 },
-        { nameEn: 'Double', nameAr: 'دبل', price: 140 },
+        { nameAr: 'سنجل', price: 100 },
+        { nameAr: 'دبل', price: 140 },
       ],
     });
     setIsItemModalOpen(true);
@@ -201,13 +192,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  // Sizes Helper inside edit modal
+  // Sizes Helper for Items
   const handleAddSize = () => {
     if (!editingItem) return;
     const currentSizes = editingItem.sizes || [];
     setEditingItem({
       ...editingItem,
-      sizes: [...currentSizes, { nameEn: 'New Size', nameAr: 'حجم جديد', price: editingItem.basePrice || 100 }],
+      sizes: [...currentSizes, { nameAr: 'حجم جديد', price: editingItem.basePrice || 100 }],
     });
   };
 
@@ -224,26 +215,57 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setEditingItem({ ...editingItem, sizes: updated });
   };
 
+  // Sizes Helper for Deals
+  const handleAddDealSize = () => {
+    if (!editingDeal) return;
+    const currentSizes = editingDeal.sizes || [];
+    setEditingDeal({
+      ...editingDeal,
+      sizes: [...currentSizes, { nameAr: 'حجم جديد', price: editingDeal.price || 150 }],
+    });
+  };
+
+  const handleRemoveDealSize = (index: number) => {
+    if (!editingDeal || !editingDeal.sizes) return;
+    const updated = editingDeal.sizes.filter((_, i) => i !== index);
+    setEditingDeal({ ...editingDeal, sizes: updated });
+  };
+
+  const handleUpdateDealSize = (index: number, field: keyof SizeOption, val: any) => {
+    if (!editingDeal || !editingDeal.sizes) return;
+    const updated = [...editingDeal.sizes];
+    updated[index] = { ...updated[index], [field]: val };
+    setEditingDeal({ ...editingDeal, sizes: updated });
+  };
+
   // Deals actions
   const handleOpenAddDeal = () => {
     setPendingDealImage(null);
     setEditingDeal({
       id: `deal-${Date.now()}`,
-      titleEn: 'NEW SPECIAL DEAL',
-      titleAr: 'عرض خاص جديد',
-      descAr: 'تفاصيل العرض الحصري',
+      titleAr: '',
+      descAr: '',
       price: 150,
-      image: '',
+      originalPrice: undefined,
+      image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80',
       coverType: 'custom',
-      badge: 'SPECIAL OFFER',
+      badge: 'عرض خاص',
+      allowSpice: true,
+      showInBanner: true,
       isActive: true,
+      sizes: [],
     });
     setIsDealModalOpen(true);
   };
 
   const handleOpenEditDeal = (deal: Deal) => {
     setPendingDealImage(null);
-    setEditingDeal({ ...deal });
+    setEditingDeal({
+      ...deal,
+      showInBanner: deal.showInBanner ?? true,
+      allowSpice: deal.allowSpice ?? true,
+      sizes: deal.sizes || [],
+    });
     setIsDealModalOpen(true);
   };
 
@@ -290,7 +312,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   return (
     <div className="fixed inset-0 z-50 bg-zinger-bg text-white overflow-y-auto flex flex-col">
       {/* 1. Admin Header Bar */}
-      <header className="sticky top-0 z-30 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800 px-4 py-3">
+      <header className="bg-zinc-950/95 border-b border-zinc-800 px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
@@ -409,9 +431,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {filteredItems.map((item) => (
                 <div
                   key={item.id}
-                  className={`p-3.5 rounded-2xl bg-zinc-950 border transition-all flex flex-col justify-between gap-3 ${
-                    item.isAvailable ? 'border-zinc-800' : 'border-red-950/60 opacity-60'
-                  }`}
+                  className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 transition-all flex flex-col justify-between gap-3"
                 >
                   <div className="flex items-start gap-3">
                     <img
@@ -438,9 +458,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <h3 className="font-cairo font-black text-sm text-white line-clamp-1 mt-1">
                         {item.nameAr}
                       </h3>
-                      <h4 className="font-heading font-bold text-[11px] text-zinc-400 uppercase line-clamp-1">
-                        {item.nameEn}
-                      </h4>
 
                       {item.sizes && item.sizes.length > 0 && (
                         <div className="flex items-center gap-1 mt-1 text-[10px] text-zinc-400 font-cairo">
@@ -454,37 +471,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex items-center justify-between pt-2 border-t border-zinc-900 gap-2">
-                    {/* In-stock toggle */}
+                  <div className="flex items-center justify-end pt-2 border-t border-zinc-900 gap-2">
                     <button
-                      onClick={() => handleToggleStock(item.id, item.isAvailable)}
-                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-cairo font-bold transition-all ${
-                        item.isAvailable
-                          ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-900/60'
-                          : 'bg-red-950/60 text-red-400 border border-red-900/60'
-                      }`}
+                      onClick={() => handleOpenEditItem(item)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-zinger-yellow text-xs font-cairo font-bold transition-all"
+                      title="تعديل الوجبة"
                     >
-                      {item.isAvailable ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                      <span>{item.isAvailable ? 'متوفر' : 'غير متوفر'}</span>
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>تعديل</span>
                     </button>
 
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleOpenEditItem(item)}
-                        className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-zinger-yellow transition-all"
-                        title="تعديل الوجبة"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-
-                      <button
-                        onClick={() => handleDeleteItem(item.id, item.nameAr)}
-                        className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-red-400 transition-all"
-                        title="حذف الوجبة"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleDeleteItem(item.id, item.nameAr)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-red-400 text-xs font-cairo font-bold transition-all"
+                      title="حذف الوجبة"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>حذف</span>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -498,10 +502,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="flex items-center justify-between bg-zinc-950 p-4 rounded-2xl border border-zinc-800">
               <div>
                 <h2 className="font-cairo font-black text-sm text-white">
-                  بانرات العروض وسلايدر الهيرو البصري
+                  عروض وبانرات مطعم زينجر
                 </h2>
                 <p className="text-xs text-zinc-400 font-cairo">
-                  يمكنك إضافة وتعديل البانرات البصرية المعروضة في أعلى الموقع
+                  يمكنك إضافة العروض وتحديد ظهورها في البانر الرئيسي بالصفحة الرئيسية
                 </p>
               </div>
 
@@ -510,7 +514,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-xs transition-all shadow-glow-yellow active:scale-95"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
-                <span>إضافة بانر عرض جديد</span>
+                <span>إضافة عرض جديد</span>
               </button>
             </div>
 
@@ -528,11 +532,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       alt={deal.titleAr}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute top-2 right-2 flex items-center gap-1.5">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-cairo font-bold ${
                         deal.isActive ? 'bg-emerald-500 text-black' : 'bg-red-500 text-white'
                       }`}>
-                        {deal.isActive ? 'نشط في الهيرو' : 'معطل'}
+                        {deal.isActive ? 'مفعل بالمتجر' : 'معطل'}
+                      </span>
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-cairo font-bold ${
+                        (deal.showInBanner ?? true) ? 'bg-zinger-yellow text-black' : 'bg-zinc-800 text-zinc-300'
+                      }`}>
+                        {(deal.showInBanner ?? true) ? 'يظهر في البانر' : 'مخفي من البانر'}
                       </span>
                     </div>
                   </div>
@@ -542,9 +551,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <h3 className="font-cairo font-black text-sm text-white">
                         {deal.titleAr}
                       </h3>
-                      <span className="font-heading font-black text-sm text-zinger-yellow">
-                        {deal.price} ج.م
-                      </span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="font-heading font-black text-sm text-zinger-yellow">
+                          {deal.price} ج.م
+                        </span>
+                        {deal.originalPrice && deal.originalPrice > deal.price && (
+                          <span className="text-[11px] font-mono text-zinc-500 line-through">
+                            {deal.originalPrice} ج.م
+                          </span>
+                        )}
+                        {deal.badge && (
+                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-cairo font-bold text-zinc-300">
+                            {deal.badge}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -593,34 +614,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             <form onSubmit={handleSaveItem} className="flex-1 overflow-y-auto py-4 space-y-4 custom-scrollbar">
-              {/* Names */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                    اسم الوجبة (عربي) *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="مثال: برجر تريبل تشيز"
-                    value={editingItem.nameAr || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, nameAr: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none focus:border-zinger-yellow font-cairo"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-heading font-bold text-zinc-300 block mb-1">
-                    MEAL NAME (ENGLISH)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. TRIPLE CHEESE BURGER"
-                    value={editingItem.nameEn || ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, nameEn: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white uppercase outline-none focus:border-zinger-yellow dir-ltr text-right"
-                  />
-                </div>
+              {/* Name */}
+              <div>
+                <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                  اسم الوجبة (عربي) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="مثال: برجر تريبل تشيز"
+                  value={editingItem.nameAr || ''}
+                  onChange={(e) => setEditingItem({ ...editingItem, nameAr: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none focus:border-zinger-yellow font-cairo"
+                />
               </div>
 
               {/* Category & Base Price */}
@@ -652,7 +658,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     required
                     value={editingItem.basePrice || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, basePrice: Number(e.target.value) })}
-                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none focus:border-zinger-yellow"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none focus:border-zinger-yellow font-mono"
                   />
                 </div>
               </div>
@@ -709,10 +715,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none font-cairo"
                   >
                     <option value="">بدون شارة</option>
-                    <option value="BESTSELLER">BESTSELLER (الأكثر طلباً)</option>
-                    <option value="HOT">HOT 🔥 (ساخن وناري)</option>
-                    <option value="CHEF PICK">CHEF PICK (اختيار الشيف)</option>
-                    <option value="SUPER CRUNCHY">SUPER CRUNCHY (مقرمش جداً)</option>
+                    <option value="BESTSELLER">الأكثر طلباً (BESTSELLER)</option>
+                    <option value="HOT">ساخن وناري 🔥 (HOT)</option>
+                    <option value="CHEF PICK">اختيار الشيف (CHEF PICK)</option>
+                    <option value="SUPER CRUNCHY">مقرمش جداً (SUPER CRUNCHY)</option>
                   </select>
                 </div>
 
@@ -733,7 +739,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="space-y-2 pt-2 border-t border-zinc-900">
                 <div className="flex items-center justify-between">
                   <span className="font-cairo font-bold text-xs text-zinc-300">
-                    خيارات الأحجام والأسعار (Single / Double / Triple...)
+                    خيارات الأحجام والأسعار
                   </span>
                   <button
                     type="button"
@@ -751,24 +757,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div key={idx} className="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
                         <input
                           type="text"
-                          placeholder="الحجم (عربي)"
+                          placeholder="اسم الحجم (عربي)"
                           value={size.nameAr}
                           onChange={(e) => handleUpdateSize(idx, 'nameAr', e.target.value)}
                           className="flex-1 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-white font-cairo"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Size (En)"
-                          value={size.nameEn}
-                          onChange={(e) => handleUpdateSize(idx, 'nameEn', e.target.value)}
-                          className="flex-1 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-white dir-ltr text-right"
                         />
                         <input
                           type="number"
                           placeholder="السعر"
                           value={size.price}
                           onChange={(e) => handleUpdateSize(idx, 'price', Number(e.target.value))}
-                          className="w-20 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinger-yellow font-bold font-mono"
+                          className="w-24 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinger-yellow font-bold font-mono"
                         />
                         <button
                           type="button"
@@ -810,7 +809,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             className="fixed inset-0 bg-black/85 backdrop-blur-sm"
           />
 
-          <div className="relative w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl p-5 z-10 flex flex-col shadow-2xl animate-fade-in text-right">
+          <div className="relative w-full max-w-xl max-h-[90vh] bg-zinc-950 border border-zinc-800 rounded-3xl p-5 z-10 flex flex-col shadow-2xl animate-fade-in text-right">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
               <h2 className="font-cairo font-black text-base text-white">
                 {editingDeal.titleAr ? `تعديل العرض: ${editingDeal.titleAr}` : 'إضافة عرض جديد'}
@@ -823,7 +822,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </button>
             </div>
 
-            <form onSubmit={handleSaveDeal} className="py-4 space-y-4">
+            <form onSubmit={handleSaveDeal} className="flex-1 overflow-y-auto py-4 space-y-4 custom-scrollbar">
               <div>
                 <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
                   عنوان العرض (عربي) *
@@ -831,69 +830,141 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <input
                   type="text"
                   required
+                  placeholder="مثال: كومبو التوفير الناري"
                   value={editingDeal.titleAr || ''}
                   onChange={(e) => setEditingDeal({ ...editingDeal, titleAr: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo outline-none focus:border-zinger-yellow"
                 />
               </div>
 
-              <div>
-                <label className="text-[11px] font-heading font-bold text-zinc-300 block mb-1">
-                  DEAL TITLE (ENGLISH)
-                </label>
-                <input
-                  type="text"
-                  value={editingDeal.titleEn || ''}
-                  onChange={(e) => setEditingDeal({ ...editingDeal, titleEn: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white uppercase dir-ltr text-right"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                  تفاصيل العرض
-                </label>
-                <textarea
-                  rows={3}
-                  value={editingDeal.descAr || ''}
-                  onChange={(e) => setEditingDeal({ ...editingDeal, descAr: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo resize-none"
-                />
-              </div>
-
-              <div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                      سعر العرض (ج.م) *
-                    </label>
-                    <input
-                      type="number"
-                      required
-                      min="1"
-                      value={editingDeal.price || ''}
-                      onChange={(e) => setEditingDeal({ ...editingDeal, price: Number(e.target.value) })}
-                      className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                      السعر قبل الخصم
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={editingDeal.originalPrice || ''}
-                      onChange={(e) => setEditingDeal({ ...editingDeal, originalPrice: Number(e.target.value) || undefined })}
-                      className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono"
-                    />
-                  </div>
+              {/* Price & Original Price */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                    سعر العرض (ج.م) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    placeholder="مثال: 150"
+                    value={editingDeal.price || ''}
+                    onChange={(e) => setEditingDeal({ ...editingDeal, price: Number(e.target.value) })}
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono outline-none focus:border-zinger-yellow"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                    السعر قبل الخصم (اختياري)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="مثال: 200"
+                    value={editingDeal.originalPrice || ''}
+                    onChange={(e) => setEditingDeal({ ...editingDeal, originalPrice: Number(e.target.value) || undefined })}
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-mono outline-none focus:border-zinger-yellow"
+                  />
                 </div>
               </div>
 
+              {/* Description */}
               <div>
                 <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
-                  غلاف العرض *
+                  تفاصيل ومكونات العرض
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="اكتب تفاصيل الوجبات والمشروبات المرفقة في العرض..."
+                  value={editingDeal.descAr || ''}
+                  onChange={(e) => setEditingDeal({ ...editingDeal, descAr: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo resize-none outline-none focus:border-zinger-yellow"
+                />
+              </div>
+
+              {/* Badge & Allow Spice */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-zinc-900">
+                <div>
+                  <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                    شارة العرض (Badge)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="مثال: عرض خاص 🔥 أو توفير عائلي"
+                    value={editingDeal.badge || ''}
+                    onChange={(e) => setEditingDeal({ ...editingDeal, badge: e.target.value || undefined })}
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white outline-none font-cairo focus:border-zinger-yellow"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 pt-4">
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={editingDeal.allowSpice ?? true}
+                      onChange={(e) => setEditingDeal({ ...editingDeal, allowSpice: e.target.checked })}
+                      className="w-4 h-4 rounded text-zinger-yellow bg-zinc-900 border-zinc-700"
+                    />
+                    <span className="font-cairo font-bold text-xs text-white">إتاحة اختيار درجة الشطة</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Sizes / Addons Manager for Deals */}
+              <div className="space-y-2 pt-2 border-t border-zinc-900">
+                <div className="flex items-center justify-between">
+                  <span className="font-cairo font-bold text-xs text-zinc-300">
+                    خيارات الأحجام أو الفئات للعرض (اختياري)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleAddDealSize}
+                    className="flex items-center gap-1 text-[11px] text-zinger-yellow hover:underline font-cairo"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>إضافة حجم للعرض</span>
+                  </button>
+                </div>
+
+                {editingDeal.sizes && editingDeal.sizes.length > 0 ? (
+                  <div className="space-y-2">
+                    {editingDeal.sizes.map((size, idx) => (
+                      <div key={idx} className="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
+                        <input
+                          type="text"
+                          placeholder="اسم الحجم / الفئة (عربي)"
+                          value={size.nameAr}
+                          onChange={(e) => handleUpdateDealSize(idx, 'nameAr', e.target.value)}
+                          className="flex-1 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-white font-cairo"
+                        />
+                        <input
+                          type="number"
+                          placeholder="السعر"
+                          value={size.price}
+                          onChange={(e) => handleUpdateDealSize(idx, 'price', Number(e.target.value))}
+                          className="w-24 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinger-yellow font-bold font-mono"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDealSize(idx)}
+                          className="p-1.5 text-zinc-500 hover:text-red-400"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-zinc-500 font-cairo">
+                    لا توجد أحجام متعددة (سيتم استخدام سعر العرض الأساسي فقط).
+                  </p>
+                )}
+              </div>
+
+              {/* Cover Image Upload */}
+              <div className="pt-2 border-t border-zinc-900">
+                <label className="text-[11px] font-cairo font-bold text-zinc-300 block mb-1">
+                  صورة غلاف العرض *
                 </label>
                 <div className="grid grid-cols-2 gap-2 mb-2">
                   <button
@@ -901,19 +972,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     onClick={() => setEditingDeal({ ...editingDeal, coverType: 'product' })}
                     className={`py-2 rounded-xl border text-xs font-cairo font-bold ${editingDeal.coverType === 'product' ? 'border-zinger-yellow text-zinger-yellow bg-zinger-yellow/10' : 'border-zinc-700 text-zinc-400'}`}
                   >
-                    ربط العرض بمنتج من المنيو
+                    ربط بصورة منتج من المنيو
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditingDeal({ ...editingDeal, coverType: 'custom' })}
                     className={`py-2 rounded-xl border text-xs font-cairo font-bold ${editingDeal.coverType !== 'product' ? 'border-zinger-yellow text-zinger-yellow bg-zinger-yellow/10' : 'border-zinc-700 text-zinc-400'}`}
                   >
-                    غلاف مخصص
+                    غلاف مخصص من الجهاز
                   </button>
                 </div>
                 {editingDeal.coverType === 'product' && (
                   <select
-                    required
                     value={editingDeal.sourceProductId || ''}
                     onChange={(e) => {
                       const product = menuItems.find((item) => item.id === e.target.value);
@@ -925,7 +995,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     }}
                     className="w-full mb-2 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-xs text-white font-cairo"
                   >
-                    <option value="">اختر المنتج المرتبط بالعرض (اختياري)</option>
+                    <option value="">اختر المنتج المرتبط بالعرض</option>
                     {menuItems.map((item) => (
                       <option key={item.id} value={item.id}>{item.nameAr}</option>
                     ))}
@@ -952,19 +1022,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="dealActive"
-                  checked={editingDeal.isActive ?? true}
-                  onChange={(e) => setEditingDeal({ ...editingDeal, isActive: e.target.checked })}
-                  className="w-4 h-4 rounded text-zinger-yellow bg-zinc-900 border-zinc-700"
-                />
-                <label htmlFor="dealActive" className="font-cairo font-bold text-xs text-white cursor-pointer">
-                  تفعيل العرض في سلايدر الهيرو بالصفحة الرئيسية
+              {/* Display & Banner Checkboxes */}
+              <div className="space-y-2 pt-3 border-t border-zinc-900">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={editingDeal.showInBanner ?? true}
+                    onChange={(e) => setEditingDeal({ ...editingDeal, showInBanner: e.target.checked })}
+                    className="w-4 h-4 rounded text-zinger-yellow bg-zinc-900 border-zinc-700"
+                  />
+                  <span className="font-cairo font-bold text-xs text-white">
+                    عرض هذا العرض في البانر الرئيسي (الهيرو) بالصفحة الرئيسية
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={editingDeal.isActive ?? true}
+                    onChange={(e) => setEditingDeal({ ...editingDeal, isActive: e.target.checked })}
+                    className="w-4 h-4 rounded text-zinger-yellow bg-zinc-900 border-zinc-700"
+                  />
+                  <span className="font-cairo font-bold text-xs text-white">
+                    تفعيل ونشر العرض في صفحة العروض بالمتجر
+                  </span>
                 </label>
               </div>
 
+              {/* Submit Button */}
               <div className="pt-3 border-t border-zinc-800">
                 <button
                   type="submit"

@@ -4,15 +4,15 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface DealsBannerProps {
   deals: Deal[];
-  onSelectDeal: (deal: Deal) => void;
+  onOpenDeals: () => void;
 }
 
-export const DealsBanner: React.FC<DealsBannerProps> = ({ deals, onSelectDeal }) => {
+export const DealsBanner: React.FC<DealsBannerProps> = ({ deals, onOpenDeals }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  const activeDeals = deals.filter((d) => d.isActive);
+  const activeDeals = deals.filter((d) => d.isActive && d.showInBanner !== false);
 
   // Auto-slide every 5 seconds
   useEffect(() => {
@@ -63,7 +63,8 @@ export const DealsBanner: React.FC<DealsBannerProps> = ({ deals, onSelectDeal })
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        onClick={() => onSelectDeal(currentDeal)}
+        onClick={() => onOpenDeals()}
+        title="عرض جميع العروض الخاصة"
         className="relative w-full aspect-[16/9] sm:aspect-[21/9] md:aspect-[24/9] rounded-3xl overflow-hidden bg-zinc-950 border border-zinger-border hover:border-zinger-yellow/60 transition-all shadow-card-dark cursor-pointer group select-none"
       >
         {/* Pure Banner Image */}

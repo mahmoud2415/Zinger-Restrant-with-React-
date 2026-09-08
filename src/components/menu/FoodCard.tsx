@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItem } from '../../types';
-import { Plus, Flame, Sparkles, Share2, EyeOff } from 'lucide-react';
+import { Plus, Flame, Sparkles, Share2 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
 
@@ -21,7 +21,6 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!item.isAvailable) return;
 
     if ((item.sizes && item.sizes.length > 0) || item.allowSpice) {
       onOpenCustomizer(item);
@@ -33,7 +32,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
 
   const handleShareItem = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const shareTitle = `${item.nameEn} | ${item.nameAr} من مطعم زينجر`;
+    const shareTitle = `${item.nameAr} من مطعم زينجر`;
     const shareText = `شوف وجبة ${item.nameAr} من مطعم زينجر بسعر ${item.basePrice} ج.م فقط! 🔥`;
     const shareUrl = `${window.location.origin}${window.location.pathname}#/product/${item.id}`;
 
@@ -52,9 +51,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
     <div
       id={`item-${item.id}`}
       onClick={handleCardClick}
-      className={`group relative rounded-2xl bg-zinger-card border border-zinger-border hover:border-zinger-yellow/50 transition-all duration-300 overflow-hidden flex flex-col justify-between food-card-shadow cursor-pointer select-none ${
-        !item.isAvailable ? 'opacity-60 grayscale-[0.4]' : ''
-      }`}
+      className="group relative rounded-2xl bg-zinger-card border border-zinger-border hover:border-zinger-yellow/50 transition-all duration-300 overflow-hidden flex flex-col justify-between food-card-shadow cursor-pointer select-none"
     >
       {/* Top Image & Badges */}
       <div className="relative aspect-[16/11] w-full bg-zinc-950 overflow-hidden">
@@ -90,17 +87,6 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
             <Share2 className="w-3.5 h-3.5" />
           </button>
         </div>
-
-        {/* Out of Stock Overlay */}
-        {!item.isAvailable && (
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-xs flex flex-col items-center justify-center gap-1 text-center p-2 z-10">
-            <EyeOff className="w-6 h-6 text-zinger-red" />
-            <span className="text-xs font-heading font-black text-zinger-red uppercase tracking-wider">
-              OUT OF STOCK
-            </span>
-            <span className="text-[11px] text-zinc-300 font-cairo">غير متوفر حالياً</span>
-          </div>
-        )}
       </div>
 
       {/* Content & Details */}
@@ -122,16 +108,14 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
             <span className="text-[10px] sm:text-xs font-bold text-zinc-400 font-cairo">ج.م</span>
           </div>
 
-          {/* Action Button: Plus Icon only */}
-          {item.isAvailable && (
-            <button
-              onClick={handleQuickAdd}
-              title="Add / Customize Meal"
-              className="w-8 h-8 rounded-full bg-zinger-yellow hover:bg-zinger-yellowHover text-black flex items-center justify-center shadow-glow-yellow-sm active:scale-90 transition-all font-black shrink-0"
-            >
-              <Plus className="w-4 h-4 stroke-[3]" />
-            </button>
-          )}
+          {/* Action Button: Plus Icon */}
+          <button
+            onClick={handleQuickAdd}
+            title="Add / Customize Meal"
+            className="w-8 h-8 rounded-full bg-zinger-yellow hover:bg-zinger-yellowHover text-black flex items-center justify-center shadow-glow-yellow-sm active:scale-90 transition-all font-black shrink-0"
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+          </button>
         </div>
       </div>
     </div>

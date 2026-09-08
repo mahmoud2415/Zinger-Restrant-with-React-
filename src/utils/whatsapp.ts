@@ -29,9 +29,9 @@ export function buildWhatsAppMessage(
   cart.forEach((cartItem, idx) => {
     subtotal += cartItem.totalPrice;
 
-    let itemLine = `${idx + 1}. *${cartItem.item.nameEn || cartItem.item.nameAr}* (${cartItem.item.nameAr})`;
+    let itemLine = `${idx + 1}. *${cartItem.item.nameAr}*`;
     if (cartItem.selectedSize) {
-      itemLine += `\n   ▫️ *الحجم:* ${cartItem.selectedSize.nameEn || cartItem.selectedSize.nameAr}`;
+      itemLine += `\n   ▫️ *الحجم:* ${cartItem.selectedSize.nameAr}`;
     }
     if (cartItem.spiceLevel) {
       itemLine += `\n   ▫️ *الشطة:* ${cartItem.spiceLevel}`;
