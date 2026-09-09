@@ -16,16 +16,14 @@ import {
   Upload, 
   ArrowLeft, 
   LogOut, 
-  Layers,
-  RefreshCw
+  Layers
 } from 'lucide-react';
 import { 
   saveMenuItem, 
   deleteMenuItem, 
   saveDeal, 
   deleteDeal, 
-  uploadMealImage,
-  syncAllMenuItemsToFirestore
+  uploadMealImage 
 } from '../../services/menuService';
 import { logoutAdmin } from '../../services/authService';
 import { useToast } from '../../context/ToastContext';
@@ -64,22 +62,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [savingDeal, setSavingDeal] = useState(false);
   const [savingDealImage, setSavingDealImage] = useState(false);
   const [pendingDealImage, setPendingDealImage] = useState<File | null>(null);
-
-  const [isSyncingMenu, setIsSyncingMenu] = useState(false);
-
-  const handleSyncAllMenu = async () => {
-    if (window.confirm('هل تريد مزامنة ورفع المنيو الرسمي كاملاً (139 وجبة مع كافة الأسعار والأحجام) إلى السحابة؟ سيتم تثبيت كافة الأصناف في Firebase وتصبح جاهزة للتعديل ورفع الصور في أي وقت.')) {
-      try {
-        setIsSyncingMenu(true);
-        const count = await syncAllMenuItemsToFirestore();
-        showToast(`تم رفع وتثبيت ${count} وجبة رسمية في السحابة بنجاح! 🔥`);
-      } catch (e: any) {
-        showToast(`حدث خطأ أثناء المزامنة: ${e.message}`);
-      } finally {
-        setIsSyncingMenu(false);
-      }
-    }
-  };
 
   // Filtered Menu Items
   const filteredItems = menuItems.filter((item) => {
@@ -435,25 +417,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </select>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={handleSyncAllMenu}
-                  disabled={isSyncingMenu}
-                  title="رفع ومزامنة الـ 139 صنف الرسمية من المنيو إلى السحابة"
-                  className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-amber-400 font-cairo font-bold text-xs transition-all active:scale-95 disabled:opacity-50"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingMenu ? 'animate-spin' : ''}`} />
-                  <span>{isSyncingMenu ? 'جاري المزامنة...' : 'مزامنة المنيو كاملاً للسحابة'}</span>
-                </button>
-
-                <button
-                  onClick={handleOpenAddItem}
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-xs transition-all shadow-glow-yellow active:scale-95"
-                >
-                  <Plus className="w-4 h-4 stroke-[3]" />
-                  <span>إضافة وجبة جديدة</span>
-                </button>
-              </div>
+              <button
+                onClick={handleOpenAddItem}
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-zinger-yellow hover:bg-zinger-yellowHover text-black font-cairo font-black text-xs transition-all shadow-glow-yellow active:scale-95 shrink-0"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>إضافة وجبة جديدة</span>
+              </button>
             </div>
 
             {/* Menu Items Table / Cards Grid */}
