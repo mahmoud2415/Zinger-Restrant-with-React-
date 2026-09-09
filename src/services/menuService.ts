@@ -4,15 +4,16 @@ import {
   doc, 
   setDoc, 
   deleteDoc, 
-  updateDoc 
+  updateDoc,
+  writeBatch
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items';
-const DEALS_STORAGE_KEY = 'zinger_local_deals';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v2';
+const DEALS_STORAGE_KEY = 'zinger_local_deals_v2';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
 function removeUndefined<T extends object>(value: T): Partial<T> {
@@ -34,15 +35,15 @@ async function withFirebaseTimeout<T>(operation: Promise<T>, message: string): P
   }
 }
 
-// Helper to get local data
+// Helper to get local data - Clean without any hardcoded demo item merging
 export function getLocalMenuItems(): MenuItem[] {
   try {
     const saved = localStorage.getItem(MENU_STORAGE_KEY);
     if (saved) {
       const items = JSON.parse(saved) as MenuItem[];
-      const demoItems = initialMenuItems.filter((item) => item.id.startsWith('demo-'));
-      const missingDemoItems = demoItems.filter((demoItem) => !items.some((item) => item.id === demoItem.id));
-      return missingDemoItems.length > 0 ? [...items, ...missingDemoItems] : items;
+      if (Array.isArray(items) && items.length > 0) {
+        return items;
+      }
     }
   } catch (e) {
     console.warn('Error reading local menu items', e);
@@ -62,7 +63,10 @@ export function getLocalDeals(): Deal[] {
   try {
     const saved = localStorage.getItem(DEALS_STORAGE_KEY);
     if (saved) {
-      return JSON.parse(saved);
+      const deals = JSON.parse(saved) as Deal[];
+      if (Array.isArray(deals) && deals.length > 0) {
+        return deals;
+      }
     }
   } catch (e) {
     console.warn('Error reading local deals', e);
@@ -80,6 +84,7 @@ export function saveLocalDeals(deals: Deal[]) {
 
 /**
  * Subscribe to Menu Items (Firestore with instant LocalStorage fallback)
+ * Single source of truth: 100% Firestore live data.
  */
 export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () => void {
   // Initial fire from local storage
@@ -95,18 +100,16 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
           snapshot.forEach((docSnap) => {
             items.push({ id: docSnap.id, ...(docSnap.data() as Omit<MenuItem, 'id'>) });
           });
-          const demoItems = initialMenuItems.filter((item) => item.id.startsWith('demo-'));
-          const remoteIds = new Set(items.map((item) => item.id));
-          const mergedItems = [
-            ...items,
-            ...demoItems.filter((demoItem) => !remoteIds.has(demoItem.id)),
-          ];
-          saveLocalMenuItems(mergedItems);
-          callback(mergedItems);
+          saveLocalMenuItems(items);
+          callback(items);
+        } else {
+          // If firestore is empty, use initialMenuItems
+          const local = getLocalMenuItems();
+          callback(local);
         }
       },
       (error) => {
-        console.info('Firestore offline/unconfigured, using local data storage:', error.message);
+        console.info('Firestore offline/unconfigured, using local cache:', error.message);
         callback(getLocalMenuItems());
       }
     );
@@ -138,7 +141,7 @@ export function subscribeToDeals(callback: (deals: Deal[]) => void): () => void 
         }
       },
       (error) => {
-        console.info('Firestore deals offline/unconfigured, using local data storage:', error.message);
+        console.info('Firestore deals offline/unconfigured, using local cache:', error.message);
         callback(getLocalDeals());
       }
     );
@@ -153,7 +156,7 @@ export function subscribeToDeals(callback: (deals: Deal[]) => void): () => void 
  * Add or Update Menu Item
  */
 export async function saveMenuItem(item: MenuItem): Promise<void> {
-  // Update locally first for zero latency
+  // Update locally first for instant responsive UI
   const current = getLocalMenuItems();
   const index = current.findIndex((i) => i.id === item.id);
   let updated: MenuItem[];
@@ -208,6 +211,20 @@ export async function toggleItemAvailability(itemId: string, isAvailable: boolea
   } catch (e) {
     console.warn('Updated locally. Firestore sync pending:', e);
   }
+}
+
+/**
+ * Batch upload all official 139 menu items to Firestore in one click
+ */
+export async function syncAllMenuItemsToFirestore(items: MenuItem[] = initialMenuItems): Promise<number> {
+  const batch = writeBatch(db);
+  for (const item of items) {
+    const itemRef = doc(db, 'menu_items', item.id);
+    batch.set(itemRef, removeUndefined(item), { merge: true });
+  }
+  await batch.commit();
+  saveLocalMenuItems(items);
+  return items.length;
 }
 
 /**
