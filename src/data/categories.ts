@@ -22,7 +22,7 @@ export const categories: Category[] = [
     nameEn: "SAVORY CREPES",
     nameAr: "كريب زينجر",
     icon: "Utensils",
-    coverImage: "/menu_items/كريب سوبر كرانشي (زنجر)/WhatsApp Image 2026-08-02 at 12.10.21 AM.jpeg",
+    coverImage: "/covers/creap.jpeg",
     descAr: "كريب مقرمش محشو بالفراخ واللحوم والموزاريلا السايحة",
   },
   {
@@ -30,7 +30,7 @@ export const categories: Category[] = [
     nameEn: "ITALIAN PIZZA",
     nameAr: "بيتزا إيطالي",
     icon: "Pizza",
-    coverImage: "/menu_items/بيتزا تشيكن باربيكيو/WhatsApp Image 2026-08-02 at 12.11.02 AM.jpeg",
+    coverImage: "/covers/pizzaa.jpeg",
     descAr: "عجينة إيطالية هشة مع تشيكن باربيكيو وبيبيروني وميكس جبن",
   },
   {
@@ -38,7 +38,7 @@ export const categories: Category[] = [
     nameEn: "PASTA & MAC",
     nameAr: "طواجن باستا",
     icon: "ChefHat",
-    coverImage: "/assets/pasta-clean.jpg",
+    coverImage: "/covers/pasta.jpeg",
     descAr: "طواجن مكرونة وبنا بالوايت صوص الإيطالي والموزاريلا المحمرة",
   },
   {
