@@ -178,7 +178,7 @@ export const initialMenuItems: MenuItem[] = [
   // ==========================================
   {
     id: "fries-chicken-plain",
-    category: "fries_rizo",
+    category: "crispy_chicken",
     nameAr: "فرايز تشيكن",
     descAr: "بطاطس فارم فريتس مقرمشة مع قطع فرايد تشيكن والبهارات الخاصة",
     basePrice: 110,
@@ -192,7 +192,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "fries-chicken-cheddar",
-    category: "fries_rizo",
+    category: "crispy_chicken",
     nameAr: "فرايز تشيكن شيدر",
     descAr: "بطاطس مقرمشة مع قطع الدجاج وصوص الجبنة الشيدر السايحة",
     basePrice: 110,
@@ -206,7 +206,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "fries-chicken-big-tasty",
-    category: "fries_rizo",
+    category: "crispy_chicken",
     nameAr: "فرايز تشيكن بيج تايستي",
     descAr: "بطاطس وقطع دجاج مقرمش غرقانة بصوص البيج تايستي المميز",
     basePrice: 120,
@@ -220,7 +220,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "fries-chicken-bbq",
-    category: "fries_rizo",
+    category: "crispy_chicken",
     nameAr: "فرايز تشيكن باربيكيو",
     descAr: "بطاطس كرانشي مع دجاج وصوص الباربيكيو المدخن وصوص الجبنة",
     basePrice: 120,
@@ -234,7 +234,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "fries-chicken-pieces",
-    category: "fries_rizo",
+    category: "crispy_chicken",
     nameAr: "فرايز تشيكن فراخ سوبريم",
     descAr: "طبق بطاطس محمل بقطع ستربس الدجاج المقرمش والموتزاريلا والصوصات",
     basePrice: 130,
@@ -248,7 +248,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "rizo-chicken",
-    category: "fries_rizo",
+    category: "crispy_chicken",
     nameAr: "أرز ريزو بالدجاج",
     descAr: "أرز ريزو متبل بالخلطة السرية مع قطع الدجاج الكرسبي وصوص الباربيكيو الغني",
     basePrice: 95,
@@ -1980,7 +1980,7 @@ export const initialMenuItems: MenuItem[] = [
   // ==========================================
   {
     id: "bomb-chicken-turkey",
-    category: "the_bomb",
+    category: "crispy_chicken",
     nameAr: "قنبلة تشيكن تركي مدخن",
     descAr: "ساندوتش القنبلة العملاق محشو بالفراخ الكرسبي والتركي المدخن والموتزاريلا وشيدر صوص",
     basePrice: 180,
@@ -1991,7 +1991,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "bomb-shish-charcoal",
-    category: "the_bomb",
+    category: "crispy_chicken",
     nameAr: "قنبلة شيش فحم",
     descAr: "ساندوتش قنبلة محشو بالشيش طاووق المشوي عالفحم والموتزاريلا السايحة",
     basePrice: 190,
@@ -2001,7 +2001,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "bomb-mix-chicken",
-    category: "the_bomb",
+    category: "crispy_chicken",
     nameAr: "قنبلة ميكس فراخ",
     descAr: "ساندوتش قنبلة محشو بمكس دجاج كرانشي وشيش وفاهيتا وغرقان صوصات",
     basePrice: 200,
@@ -2012,7 +2012,7 @@ export const initialMenuItems: MenuItem[] = [
   },
   {
     id: "bomb-baladi-burger",
-    category: "the_bomb",
+    category: "crispy_chicken",
     nameAr: "قنبلة برجر بلدي",
     descAr: "ساندوتش قنبلة عملاق محشو ببرجر بلدي مشوي وقطع كفتة وموتزاريلا وصوص تكساس",
     basePrice: 240,
