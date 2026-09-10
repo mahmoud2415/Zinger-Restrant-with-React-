@@ -6,7 +6,7 @@ export const categories: Category[] = [
     nameEn: "BEEF BURGERS",
     nameAr: "برجر لحم",
     icon: "Beef",
-    coverImage: "/assets/menu_items/كلاسيك بيف برجر/WhatsApp Image 2026-08-02 at 1.58.49 AM.webp",
+    coverImage: "/covers/burgers.jpeg",
     descAr: "برجر لحم بلدي مشوي عالفحم 200جم، 400جم، 600جم",
   },
   {
@@ -14,7 +14,7 @@ export const categories: Category[] = [
     nameEn: "CRUNCHY SANDWICHES",
     nameAr: "ساندوتشات كرانشي",
     icon: "Drumstick",
-    coverImage: "/assets/menu/zinger-menu-014.webp",
+    coverImage: "/covers/crispy_chicken.jpeg",
     descAr: "صدور دجاج كرانشي مقرمشة، سوبر زينجر، فرايز، وساندوتشات القنبلة",
   },
   {
@@ -22,7 +22,7 @@ export const categories: Category[] = [
     nameEn: "SAVORY CREPES",
     nameAr: "كريب زينجر",
     icon: "Utensils",
-    coverImage: "/covers/creap.jpeg",
+    coverImage: "/covers/crepes.jpeg",
     descAr: "كريب مقرمش محشو بالفراخ واللحوم والموزاريلا السايحة",
   },
   {
@@ -30,7 +30,7 @@ export const categories: Category[] = [
     nameEn: "ITALIAN PIZZA",
     nameAr: "بيتزا إيطالي",
     icon: "Pizza",
-    coverImage: "/covers/pizzaa.jpeg",
+    coverImage: "/covers/pizza.jpeg",
     descAr: "عجينة إيطالية هشة مع تشيكن باربيكيو وبيبيروني وميكس جبن",
   },
   {
@@ -46,7 +46,7 @@ export const categories: Category[] = [
     nameEn: "WETCH ROLLS",
     nameAr: "وتش رول",
     icon: "Layers",
-    coverImage: "/menu_items/وش رول/unnamed.jpg",
+    coverImage: "/covers/rolls.jpeg",
     descAr: "رول تورتيلا محمص غرقان بقطع الدجاج والجبنة وش بيتزا",
   },
   {
@@ -54,7 +54,7 @@ export const categories: Category[] = [
     nameEn: "ITALIAN HAWAWSHI",
     nameAr: "حواوشي إيطالي",
     icon: "Flame",
-    coverImage: "/menu_items/حووشي.jpg",
+    coverImage: "/covers/hawawshi.jpeg",
     descAr: "حواوشي مخبوز في الفرن بوش بيتزا وموزاريلا",
   },
   {
@@ -62,7 +62,7 @@ export const categories: Category[] = [
     nameEn: "MELTED CHEESE",
     nameAr: "غرقانة جبنة",
     icon: "Zap",
-    coverImage: "/menu_items/غرقانة جبنه.jpg",
+    coverImage: "/covers/melted_cheese.jpeg",
     descAr: "طاسات ساخنة غرقانة بصوص الشيدر والجبنة السايحة",
   },
   {
@@ -70,7 +70,7 @@ export const categories: Category[] = [
     nameEn: "EXTRAS & SAUCES",
     nameAr: "الإضافات والصوصات",
     icon: "PackagePlus",
-    coverImage: "/menu_items/الإضافات/sfda.jpg",
+    coverImage: "/covers/extras.jpeg",
     descAr: "بطاطس، أصابع موزاريلا، صوصات شيدر ورانش ومشروبات باردة",
   },
 ];
