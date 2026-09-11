@@ -12,9 +12,48 @@ import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v9';
-const DEALS_STORAGE_KEY = 'zinger_local_deals_v9';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v10';
+const DEALS_STORAGE_KEY = 'zinger_local_deals_v10';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
+
+const initialImageMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
+
+/**
+ * Resolves the final image URL for a menu item.
+ * Guarantees that the new official high-res generated images always take priority over legacy static paths,
+ * while preserving any custom admin uploaded images (base64 data URLs or cloud storage URLs).
+ */
+export function resolveItemImage(itemId: string, currentImage?: string): string {
+  const freshImg = initialImageMap.get(itemId);
+  if (!freshImg) {
+    return currentImage || '/assets/placeholder-food.jpg';
+  }
+
+  // If no image is provided or empty string, use the latest fresh image
+  if (!currentImage || typeof currentImage !== 'string' || currentImage.trim() === '') {
+    return freshImg;
+  }
+
+  // Preserve user-uploaded custom images (Base64 data URLs, Cloudinary, Firebase Storage, etc.)
+  const isCustomUserUpload =
+    currentImage.startsWith('data:image/') ||
+    currentImage.startsWith('blob:') ||
+    currentImage.startsWith('http://') ||
+    currentImage.startsWith('https://');
+
+  if (isCustomUserUpload) {
+    return currentImage;
+  }
+
+  // If the stored path is already identical to the latest fresh image path, use it
+  if (currentImage === freshImg) {
+    return freshImg;
+  }
+
+  // For any legacy or old static path (e.g. /assets/menu/..., /assets/pasta-clean.jpg, حووشي.jpg, /menu_items/كريب..., etc.),
+  // ALWAYS upgrade to the latest official high-resolution image!
+  return freshImg;
+}
 
 function removeUndefined<T extends object>(value: T): Partial<T> {
   return Object.fromEntries(
@@ -42,16 +81,10 @@ export function getLocalMenuItems(): MenuItem[] {
     if (saved) {
       const items = JSON.parse(saved) as MenuItem[];
       if (Array.isArray(items) && items.length > 0) {
-        // Ensure default image paths are updated to the latest fresh assets
-        const initialMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
-        const updatedItems = items.map((item) => {
-          const freshImg = initialMap.get(item.id);
-          if (freshImg && (!item.image || item.image.startsWith('/assets/menu/') || item.image.startsWith('/assets/menu_items/'))) {
-            return { ...item, image: freshImg };
-          }
-          return item;
-        });
-        return updatedItems;
+        return items.map((item) => ({
+          ...item,
+          image: resolveItemImage(item.id, item.image),
+        }));
       }
     }
   } catch (e) {
@@ -93,7 +126,7 @@ export function saveLocalDeals(deals: Deal[]) {
 
 /**
  * Subscribe to Menu Items (Firestore with instant LocalStorage fallback)
- * Single source of truth: 100% Firestore live data.
+ * Single source of truth: 100% Firestore live data with automatic high-res image healing.
  */
 export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () => void {
   // Initial fire from local storage
@@ -105,15 +138,17 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
       menuCol,
       (snapshot) => {
         if (!snapshot.empty) {
-          const initialMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
           const items: MenuItem[] = [];
           snapshot.forEach((docSnap) => {
             const data = docSnap.data() as Omit<MenuItem, 'id'>;
-            const freshImg = initialMap.get(docSnap.id);
-            const image = (freshImg && (!data.image || data.image.startsWith('/assets/menu/') || data.image.startsWith('/assets/menu_items/')))
-              ? freshImg
-              : data.image;
-            items.push({ id: docSnap.id, ...data, image });
+            const resolvedImage = resolveItemImage(docSnap.id, data.image);
+
+            // Self-heal Firestore doc if image is outdated
+            if (data.image !== resolvedImage && !resolvedImage.startsWith('data:') && !resolvedImage.startsWith('http')) {
+              updateDoc(docSnap.ref, { image: resolvedImage }).catch(() => {});
+            }
+
+            items.push({ id: docSnap.id, ...data, image: resolvedImage });
           });
           saveLocalMenuItems(items);
           callback(items);
