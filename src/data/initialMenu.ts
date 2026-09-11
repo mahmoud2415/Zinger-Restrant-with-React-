@@ -799,7 +799,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب مشكل جبن",
     descAr: "مكس أجبان (موتزاريلا، شيدر، رومي، كيري) مع فلفل وزيتون وصوص",
     basePrice: 80,
-    image: "/menu_items/كريب مكس جبن/WhatsApp Image 2026-08-02 at 12.10.20 AM.jpeg",
+    image: "/menu_items/crepes/crepe-mix-cheese.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -815,7 +815,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب بانية / تشيكن كرسبي",
     descAr: "قطع دجاج بانية مقرمشة مع موتزاريلا وفلفل وصوصات الكريب",
     basePrice: 80,
-    image: "/assets/menu_items/كريب بانية - تشيكن كرسبي/WhatsApp Image 2026-08-02 at 12.10.21 AM (1).jpeg",
+    image: "/menu_items/crepes/crepe-pane-crispy.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -831,7 +831,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب كرسبي ناجتس",
     descAr: "قطع ناجتس مقرمشة مع جبنة موتزاريلا وبطاطس وصوصات",
     basePrice: 95,
-    image: "/assets/menu/zinger-menu-013.webp",
+    image: "/menu_items/crepes/crepe-crispy-nuggets.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -847,7 +847,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب سوبر كرانشي (زنجر)",
     descAr: "دجاج سوبر كرانشي مقرمش حار مع صوص الرانش والموتزاريلا وفلفل",
     basePrice: 140,
-    image: "/menu_items/كريب سوبر كرانشي (زنجر)/WhatsApp Image 2026-08-02 at 12.10.21 AM.jpeg",
+    image: "/menu_items/crepes/crepe-super-crunchy.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "BESTSELLER",
@@ -864,7 +864,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب زنجر سوبريم",
     descAr: "زنجر مقرمش مع شرائح تركي مدخن، شيدر، موتزاريلا وصوص الشيدر",
     basePrice: 145,
-    image: "/assets/menu/zinger-menu-014.webp",
+    image: "/menu_items/crepes/crepe-zinger-supreme.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -880,7 +880,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب تشيكن باربيكيو",
     descAr: "دجاج متبل بصوص الباربيكيو المدخن مع موتزاريلا وفلفل ألوان",
     basePrice: 145,
-    image: "/assets/menu/zinger-menu-015.webp",
+    image: "/menu_items/crepes/crepe-chicken-bbq.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -896,7 +896,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب تشيكن رانش",
     descAr: "دجاج مقرمش مع صوص الرانش الغني والجبنة الموتزاريلا",
     basePrice: 145,
-    image: "/assets/menu_items/كريب تشيكن رانش/WhatsApp Image 2026-08-02 at 12.10.20 AM (1).jpeg",
+    image: "/menu_items/crepes/crepe-chicken-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "BESTSELLER",
@@ -913,7 +913,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب تشيكن هالبينو",
     descAr: "دجاج كرانشي مع شرائح هالبينو حارة وصوص شيدر وموتزاريلا",
     basePrice: 145,
-    image: "/assets/menu/zinger-menu-016.webp",
+    image: "/menu_items/crepes/crepe-chicken-jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "HOT",
@@ -930,7 +930,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب شيش فحم",
     descAr: "شيش طاووق مشوي عالفحم مع خضار وموتزاريلا وصوصات",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-017.webp",
+    image: "/menu_items/crepes/crepe-shish-charcoal.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -946,7 +946,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب فاهيتا",
     descAr: "فاهيتا دجاج متبلة مع بصل وفلفل ألوان وجبنة موتزاريلا",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-018.webp",
+    image: "/menu_items/crepes/crepe-fajita.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -962,7 +962,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب مكس فراخ",
     descAr: "مكس دجاج (شيش + كرانشي + بانية) مع موتزاريلا وفلفل وصوصات",
     basePrice: 150,
-    image: "/assets/menu_items/كريب مكس فراخ/WhatsApp Image 2026-08-02 at 12.10.22 AM.jpeg",
+    image: "/menu_items/crepes/crepe-mix-chicken.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -978,7 +978,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب مكس لحوم",
     descAr: "مكس لحوم (برجر + سوسيس + سجق شرقي) مع موتزاريلا وصوصات",
     basePrice: 150,
-    image: "/assets/menu/zinger-menu-005.webp",
+    image: "/menu_items/crepes/crepe-mix-meat.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -994,7 +994,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب مكس مشكل",
     descAr: "تشكيلة عملاقة من قطع الفراخ واللحوم مع صوصات مشكلة وموتزاريلا",
     basePrice: 155,
-    image: "/assets/menu/zinger-menu-006.webp",
+    image: "/menu_items/crepes/crepe-mix-all.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1010,7 +1010,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب شيش ع زنجر",
     descAr: "دويتو شيش طاووق عالفحم مع دجاج زنجر مقرمش وموتزاريلا",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-007.webp",
+    image: "/menu_items/crepes/crepe-shish-zinger.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1026,7 +1026,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب زنجر سبيشيال",
     descAr: "وجبة كريب خاصة مضاعفة بقطع الزنجر والتوابل والشيدر والرومي",
     basePrice: 190,
-    image: "/assets/menu/zinger-menu-008.webp",
+    image: "/menu_items/crepes/crepe-zinger-special.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "CHEF PICK",
@@ -1041,7 +1041,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب تشيكن بيكون",
     descAr: "دجاج كرانشي مع شرائح بيف بيكون وشيدر وموتزاريلا",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-009.webp",
+    image: "/menu_items/crepes/crepe-chicken-bacon.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1057,7 +1057,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب شيش على سوسيس",
     descAr: "شيش طاووق مع شرائح هوت دوج سوسيس وموتزاريلا وصوصات",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-010.webp",
+    image: "/menu_items/crepes/crepe-shish-sausage.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1073,7 +1073,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب زنجر ع بانية",
     descAr: "دجاج زنجر حار مع دجاج بانية كرسبي وموتزاريلا وفلفل",
     basePrice: 140,
-    image: "/assets/menu/zinger-menu-011.webp",
+    image: "/menu_items/crepes/crepe-zinger-pane.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1089,7 +1089,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب زنجر ع سوسيس",
     descAr: "دجاج زنجر مع سوسيس وموتزاريلا سايحة وصوص باربيكيو",
     basePrice: 150,
-    image: "/assets/menu/zinger-menu-012.webp",
+    image: "/menu_items/crepes/crepe-zinger-sausage.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1105,7 +1105,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب زنجر ع بطاطس",
     descAr: "دجاج زنجر مقرمش مع بطاطس فارم فريتس وصوص شيدر وموتزاريلا",
     basePrice: 155,
-    image: "/assets/menu/zinger-menu-013.webp",
+    image: "/menu_items/crepes/crepe-zinger-fries.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1121,7 +1121,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب سوسيس ع بانية",
     descAr: "سوسيس مع بانية دجاج مقرمش وموتزاريلا وصوصات",
     basePrice: 140,
-    image: "/assets/menu/zinger-menu-014.webp",
+    image: "/menu_items/crepes/crepe-sausage-pane.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1137,7 +1137,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب بانية ع كفتة",
     descAr: "بانية دجاج مع كفتة مشوية عالفحم وموتزاريلا وفلفل",
     basePrice: 120,
-    image: "/assets/menu/zinger-menu-015.webp",
+    image: "/menu_items/crepes/crepe-pane-kofta.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1153,7 +1153,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب بانية ع بطاطس",
     descAr: "بانية مقرمش مع بطاطس وصوص الشيدر والمايونيز والموتزاريلا",
     basePrice: 115,
-    image: "/assets/menu/zinger-menu-016.webp",
+    image: "/menu_items/crepes/crepe-pane-fries.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1169,7 +1169,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب برجر",
     descAr: "قطع برجر لحم مشوي مع موتزاريلا وصوص تكساس وفلفل وزيتون",
     basePrice: 110,
-    image: "/assets/menu/zinger-menu-017.webp",
+    image: "/menu_items/crepes/crepe-burger.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1185,7 +1185,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب سجق",
     descAr: "سجق شرقي بلدي متبل مع صوصات وموتزاريلا وفلفل ألوان",
     basePrice: 110,
-    image: "/assets/menu/zinger-menu-018.webp",
+    image: "/menu_items/crepes/crepe-oriental-sausage.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1201,7 +1201,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب سوسيس",
     descAr: "شرائح هوت دوج سوسيس مع جبنة موتزاريلا وصوصات الكريب",
     basePrice: 110,
-    image: "/assets/menu/zinger-menu-005.webp",
+    image: "/menu_items/crepes/crepe-sausage.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1217,7 +1217,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب جمبري كرسبي",
     descAr: "جمبري كرسبي مقرمش مع صوص الرانش والموتزاريلا وفلفل",
     basePrice: 230,
-    image: "/assets/menu/zinger-menu-006.webp",
+    image: "/menu_items/crepes/crepe-crispy-shrimp.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "CHEF PICK",
@@ -1231,7 +1231,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب كوردون بلو",
     descAr: "قطع كوردون بلو دجاج محشو بالجبنة مع موتزاريلا وصوص شيدر",
     basePrice: 150,
-    image: "/assets/menu/zinger-menu-007.webp",
+    image: "/menu_items/crepes/crepe-cordon-bleu.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1247,7 +1247,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب كوردون بلو ع استربس",
     descAr: "كوردون بلو دجاج مع استربس كريسبي وموتزاريلا وصوصات",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-008.webp",
+    image: "/menu_items/crepes/crepe-cordon-bleu-strips.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1263,7 +1263,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب كوردون بلو ع شيش",
     descAr: "كوردون بلو دجاج مع شيش طاووق مشوي وموتزاريلا سايحة",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-009.webp",
+    image: "/menu_items/crepes/crepe-cordon-bleu-shish.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1279,7 +1279,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب استربس",
     descAr: "أصابع استربس دجاج كريسبي مقرمشة مع موتزاريلا وصوصات",
     basePrice: 140,
-    image: "/assets/menu/zinger-menu-010.webp",
+    image: "/menu_items/crepes/crepe-strips.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1295,7 +1295,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب بطاطس",
     descAr: "بطاطس فارم فريتس مع موتزاريلا وصوصات المايونيز والكاتشب والجبنة",
     basePrice: 85,
-    image: "/assets/menu/zinger-menu-011.webp",
+    image: "/menu_items/crepes/crepe-fries.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1311,7 +1311,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب تشيكن ناتشل",
     descAr: "دجاج مقرمش مع صوص الناتشوز والجبنة الشيدر والموتزاريلا",
     basePrice: 155,
-    image: "/assets/menu/zinger-menu-012.webp",
+    image: "/menu_items/crepes/crepe-chicken-nacho.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1327,7 +1327,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب السعادة",
     descAr: "صوص تكساس + مكس جبن + برجر بيف + سوسيس",
     basePrice: 195,
-    image: "/assets/menu/zinger-menu-013.webp",
+    image: "/menu_items/crepes/crepe-happiness.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "BESTSELLER",
@@ -1344,7 +1344,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب ديناميت",
     descAr: "صوص رانش + مكس جبن + بيبروني + استربس + شيش فحم",
     basePrice: 170,
-    image: "/assets/menu/zinger-menu-014.webp",
+    image: "/menu_items/crepes/crepe-dynamite.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "HOT",
@@ -1361,7 +1361,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب نايتس",
     descAr: "شيدر صوص + فرايد تشيكن + استربس + رومي مدخن",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-015.webp",
+    image: "/menu_items/crepes/crepe-knights.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1377,7 +1377,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب جولي",
     descAr: "صوص رانش + بانية + استربس + كوردون بلو",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-016.webp",
+    image: "/menu_items/crepes/crepe-jolly.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1393,7 +1393,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب ديفيلز",
     descAr: "صوص باربيكيو + صدور جريل + فاهيتا فراخ + شيش فحم",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-017.webp",
+    image: "/menu_items/crepes/crepe-devils.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -1409,7 +1409,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب منستر",
     descAr: "تكساس + برجر + بانية + هوت دوج + شيش فحم",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-018.webp",
+    image: "/menu_items/crepes/crepe-monster.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -1425,7 +1425,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "كريب فانتازي",
     descAr: "صوص باربيكيو + برجر بلدي + كفتة فحم + شيش فحم",
     basePrice: 185,
-    image: "/assets/menu/zinger-menu-005.webp",
+    image: "/menu_items/crepes/crepe-fantasy.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "CHEF PICK",
