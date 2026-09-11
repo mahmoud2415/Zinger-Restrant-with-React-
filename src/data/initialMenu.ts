@@ -270,7 +270,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا مارجريتا",
     descAr: "صلصة طماطم إيطالية، جبنة موتزاريلا سايحة، وزعتر بري",
     basePrice: 130,
-    image: "/assets/menu_items/بيتزا مارجريتا/WhatsApp Image 2026-08-02 at 12.11.02 AM (1).jpeg",
+    image: "/menu_items/pizza/pizza-margherita.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -285,7 +285,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا خضروات جوليان",
     descAr: "فلفل ألوان جوليان، طماطم، زيتون أسود، مشروم، وموتزاريلا غنية",
     basePrice: 130,
-    image: "/assets/menu/zinger-menu-011.webp",
+    image: "/menu_items/pizza/pizza-julienne-veggies.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -300,7 +300,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا مشروم",
     descAr: "شرائح مشروم طازج مشوح، صوص بيتزا، وجبنة موتزاريلا هشة",
     basePrice: 130,
-    image: "/assets/menu/zinger-menu-012.webp",
+    image: "/menu_items/pizza/pizza-mushroom.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -315,7 +315,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا مكس جبن",
     descAr: "مزيج غني من الموتزاريلا، الرومي المدخن، الشيدر الأصفر، والكيري",
     basePrice: 160,
-    image: "/assets/menu_items/بيتزا مكس جبن/WhatsApp Image 2026-08-02 at 12.11.01 AM.jpeg",
+    image: "/menu_items/pizza/pizza-mix-cheese.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -330,7 +330,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا كواترو فورماج",
     descAr: "أربعة أنواع أجبان فاخرة إيطالية مع لمسة أوريجانو مميزة",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-013.webp",
+    image: "/menu_items/pizza/pizza-quattro-formaggi.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -345,7 +345,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا كرانشي رومي مدخن",
     descAr: "دجاج كرانشي مقرمش مع شرائح الرومي المدخن وموتزاريلا وفلفل ألوان",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-014.webp",
+    image: "/menu_items/pizza/pizza-crunchy-turkey.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -360,7 +360,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا تشيكن باربيكيو",
     descAr: "قطع دجاج متبلة، صوص باربيكيو مدخن، موتزاريلا وفلفل ألوان",
     basePrice: 160,
-    image: "/assets/menu_items/بيتزا تشيكن باربيكيو/WhatsApp Image 2026-08-02 at 12.11.02 AM.jpeg",
+    image: "/menu_items/pizza/pizza-chicken-bbq.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "BESTSELLER",
@@ -376,7 +376,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا تشيكن تكساس",
     descAr: "دجاج تكساس المتبل مع صوص تكساس الحار وزيتون وموتزاريلا",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-015.webp",
+    image: "/menu_items/pizza/pizza-chicken-texas.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -391,7 +391,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا شيش باربيكيو",
     descAr: "شيش طاووق مشوي عالفحم مع صوص باربيكيو وموتزاريلا غنية",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-016.webp",
+    image: "/menu_items/pizza/pizza-shish-bbq.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -406,7 +406,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا تشيكن رانش",
     descAr: "قطع دجاج كرانشي مقرمشة مع خيوط صوص الرانش الأبيض الغني والموتزاريلا",
     basePrice: 160,
-    image: "/assets/menu_items/بيتزا تشيكن رانش/WhatsApp Image 2026-08-02 at 12.11.01 AM (1).jpeg",
+    image: "/menu_items/pizza/pizza-chicken-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "BESTSELLER",
@@ -422,7 +422,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا صدور جريل",
     descAr: "صدور دجاج متبلة مشوية على الجريل مع زيتون وموتزاريلا وفلفل",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-017.webp",
+    image: "/menu_items/pizza/pizza-grilled-breasts.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -437,7 +437,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا سوبر سوبريم فراخ",
     descAr: "تشكيلة دجاج مقرمش وجريل مع مشروم، فلفل ألوان، زيتون، وموتزاريلا",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-018.webp",
+    image: "/menu_items/pizza/pizza-supreme-chicken.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -452,7 +452,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا سوبر سوبريم لحوم",
     descAr: "لحم مفروم متبل، سوسيس، بيبروني، مشروم، فلفل ألوان، وموتزاريلا",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-005.webp",
+    image: "/menu_items/pizza/pizza-supreme-meat.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -467,7 +467,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا مكس فراخ",
     descAr: "مكس دجاج (كرانشي + شيش + فاهيتا) مع موتزاريلا وخضار طازج",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-006.webp",
+    image: "/menu_items/pizza/pizza-mix-chicken.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -482,7 +482,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا مفروم",
     descAr: "لحم مفروم بلدي متبل مع صوص الطماطم الإيطالي وموتزاريلا",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-007.webp",
+    image: "/menu_items/pizza/pizza-minced-meat.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -497,7 +497,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا سوسيس",
     descAr: "شرائح هوت دوج سوسيس مع فلفل ألوان، زيتون، وصوص وموتزاريلا",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-008.webp",
+    image: "/menu_items/pizza/pizza-sausage.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -512,7 +512,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا ديب رانش",
     descAr: "بيتزا غرقانة بصوص الرانش المكثف مع طبقات الدجاج الكرسبي والموتزاريلا",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-009.webp",
+    image: "/menu_items/pizza/pizza-deep-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -527,7 +527,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا زينجر",
     descAr: "دجاج زينجر الحار الشهير مع صوصات زينجر وموتزاريلا وفلفل",
     basePrice: 160,
-    image: "/assets/menu/zinger-menu-010.webp",
+    image: "/menu_items/pizza/pizza-zinger.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "HOT",
@@ -543,7 +543,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا فراخ مكسيكي",
     descAr: "دجاج بخلطة التوابل المكسيكية الحارة مع هالبينو وموتزاريلا وفلفل",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-011.webp",
+    image: "/menu_items/pizza/pizza-mexican-chicken.jpeg",
     allowSpice: true,
     isAvailable: true,
     sizes: [
@@ -558,7 +558,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا فاهيتا",
     descAr: "فاهيتا دجاج مشوية مع شرائح البصل والفلفل الألوان والموتزاريلا",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-012.webp",
+    image: "/menu_items/pizza/pizza-fajita.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -573,7 +573,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا شيش فحم",
     descAr: "قطع شيش متبلة مشوية على الفحم الحقيقي مع خضار وموتزاريلا",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-013.webp",
+    image: "/menu_items/pizza/pizza-charcoal-shish.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -588,7 +588,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا بيبروني",
     descAr: "شرائح البيبروني الإيطالي المحمرة مع صوص الطماطم وموتزاريلا هشة",
     basePrice: 160,
-    image: "/assets/menu_items/بيتزا بيبيروني/WhatsApp Image 2026-08-02 at 12.11.02 AM (2).jpeg",
+    image: "/menu_items/pizza/pizza-pepperoni.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -600,10 +600,10 @@ export const initialMenuItems: MenuItem[] = [
   {
     id: "pizza-chicken-jalapeno",
     category: "pizza",
-    nameAr: "بيتزا تشيكن هالبينوش",
+    nameAr: "بيتزا تشيكن هالبينو",
     descAr: "دجاج كرانشي مقرمش مع حلقات هالبينو حارة وصوص شيدر وموتزاريلا",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-014.webp",
+    image: "/menu_items/pizza/pizza-chicken-jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "HOT",
@@ -619,7 +619,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا تشيكن بيكون",
     descAr: "دجاج مقرمش مع شرائح البيف بيكون المدخن وموتزاريلا وفلفل",
     basePrice: 165,
-    image: "/assets/menu/zinger-menu-015.webp",
+    image: "/menu_items/pizza/pizza-chicken-bacon.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -634,7 +634,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا تونة",
     descAr: "قطع تونة فاخرة، بصل، فلفل ألوان، زيتون، وجبنة موتزاريلا",
     basePrice: 185,
-    image: "/assets/menu/zinger-menu-016.webp",
+    image: "/menu_items/pizza/pizza-tuna.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -649,7 +649,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا بسطرمة",
     descAr: "بسطرمة بلدي فاخرة مع فلفل ألوان وطماطم وموتزاريلا",
     basePrice: 195,
-    image: "/assets/menu/zinger-menu-017.webp",
+    image: "/menu_items/pizza/pizza-pastrami.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -664,7 +664,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا جمبري",
     descAr: "جمبري طازج متبل مع صوص إيطالي وموتزاريلا وفلفل ألوان",
     basePrice: 195,
-    image: "/assets/menu/zinger-menu-018.webp",
+    image: "/menu_items/pizza/pizza-shrimp.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -679,7 +679,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا سي رانش",
     descAr: "جمبري وسي فود مع خيوط صوص الرانش الغني وموتزاريلا سايحة",
     basePrice: 205,
-    image: "/assets/menu/zinger-menu-005.webp",
+    image: "/menu_items/pizza/pizza-sea-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
     badge: "CHEF PICK",
@@ -695,7 +695,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا فور سيزون",
     descAr: "أربعة أقسام متنوعة (دجاج + لحم + بيبروني + مكس جبن)",
     basePrice: 205,
-    image: "/assets/menu/zinger-menu-006.webp",
+    image: "/menu_items/pizza/pizza-four-seasons.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -710,7 +710,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا بيف بيكون",
     descAr: "بيف بيكون محمر مع فلفل ألوان وزيتون وموتزاريلا إيطالية",
     basePrice: 180,
-    image: "/assets/menu/zinger-menu-007.webp",
+    image: "/menu_items/pizza/pizza-beef-bacon.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -725,7 +725,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا ناشفيل",
     descAr: "دجاج ناشفيل الحار بنكهة التوابل الخاصة والموتزاريلا والصوصات",
     basePrice: 170,
-    image: "/assets/menu/zinger-menu-008.webp",
+    image: "/menu_items/pizza/pizza-nashville.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "HOT",
@@ -741,7 +741,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا متر زينجر",
     descAr: "بيتزا عملاقة بطول متر كامل بأربعة نكهات مختلفة وتكفي العائلة",
     basePrice: 550,
-    image: "/assets/menu/zinger-menu-009.webp",
+    image: "/menu_items/pizza/pizza-meter.jpeg",
     allowSpice: true,
     isAvailable: true,
     badge: "SUPER CRUNCHY",
@@ -752,7 +752,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا بسطرمة كيري",
     descAr: "بسطرمة فاخرة مع جبنة كيري كريمية وموتزاريلا وفلفل",
     basePrice: 190,
-    image: "/assets/menu/zinger-menu-010.webp",
+    image: "/menu_items/pizza/pizza-pastrami-kiri.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -767,7 +767,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا سجق كيري",
     descAr: "سجق شرقي بلدي متبل مع قطع جبنة كيري وموتزاريلا هشة",
     basePrice: 170,
-    image: "/assets/menu/zinger-menu-011.webp",
+    image: "/menu_items/pizza/pizza-oriental-sausage-kiri.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
@@ -782,7 +782,7 @@ export const initialMenuItems: MenuItem[] = [
     nameAr: "بيتزا سي فوود",
     descAr: "تشكيلة فواكه البحر والجمبري مع الصوص الخاص وموتزاريلا",
     basePrice: 240,
-    image: "/assets/menu/zinger-menu-012.webp",
+    image: "/menu_items/pizza/pizza-seafood.jpeg",
     allowSpice: false,
     isAvailable: true,
     sizes: [
