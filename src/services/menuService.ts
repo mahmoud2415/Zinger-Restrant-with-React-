@@ -12,8 +12,8 @@ import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v7';
-const DEALS_STORAGE_KEY = 'zinger_local_deals_v7';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v8';
+const DEALS_STORAGE_KEY = 'zinger_local_deals_v8';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
 function removeUndefined<T extends object>(value: T): Partial<T> {
