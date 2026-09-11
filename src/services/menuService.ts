@@ -12,8 +12,8 @@ import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v2';
-const DEALS_STORAGE_KEY = 'zinger_local_deals_v2';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v5';
+const DEALS_STORAGE_KEY = 'zinger_local_deals_v5';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
 function removeUndefined<T extends object>(value: T): Partial<T> {
@@ -42,7 +42,16 @@ export function getLocalMenuItems(): MenuItem[] {
     if (saved) {
       const items = JSON.parse(saved) as MenuItem[];
       if (Array.isArray(items) && items.length > 0) {
-        return items;
+        // Ensure default image paths are updated to the latest fresh assets
+        const initialMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
+        const updatedItems = items.map((item) => {
+          const freshImg = initialMap.get(item.id);
+          if (freshImg && (!item.image || item.image.startsWith('/assets/menu/') || item.image.startsWith('/assets/menu_items/'))) {
+            return { ...item, image: freshImg };
+          }
+          return item;
+        });
+        return updatedItems;
       }
     }
   } catch (e) {
@@ -96,9 +105,15 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
       menuCol,
       (snapshot) => {
         if (!snapshot.empty) {
+          const initialMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
           const items: MenuItem[] = [];
           snapshot.forEach((docSnap) => {
-            items.push({ id: docSnap.id, ...(docSnap.data() as Omit<MenuItem, 'id'>) });
+            const data = docSnap.data() as Omit<MenuItem, 'id'>;
+            const freshImg = initialMap.get(docSnap.id);
+            const image = (freshImg && (!data.image || data.image.startsWith('/assets/menu/') || data.image.startsWith('/assets/menu_items/')))
+              ? freshImg
+              : data.image;
+            items.push({ id: docSnap.id, ...data, image });
           });
           saveLocalMenuItems(items);
           callback(items);
