@@ -12,8 +12,8 @@ import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v10';
-const DEALS_STORAGE_KEY = 'zinger_local_deals_v10';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v11';
+const DEALS_STORAGE_KEY = 'zinger_local_deals_v11';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
 const initialImageMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));

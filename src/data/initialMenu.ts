@@ -1738,12 +1738,12 @@ export const initialMenuItems: MenuItem[] = [
   },
 
   // ==========================================
-  // 7. WETCH ROLLS (وش رول)
+  // 7. WETCH ROLLS (وتش رول)
   // ==========================================
   {
     id: "roll-chicken-turkey",
     category: "rolls",
-    nameAr: "وش رول تشيكن تركي مدخن",
+    nameAr: "وتش رول تشيكن تركي مدخن",
     descAr: "رول تورتيلا محمص ومحشو بالدجاج المقرمش والتركي المدخن والموتزاريلا وش بيتزا",
     basePrice: 180,
     image: "/menu_items/rolls/roll-chicken-turkey.jpeg",
@@ -1753,7 +1753,7 @@ export const initialMenuItems: MenuItem[] = [
   {
     id: "roll-chicken-ranch",
     category: "rolls",
-    nameAr: "وش رول تشيكن رانش مدخن",
+    nameAr: "وتش رول تشيكن رانش مدخن",
     descAr: "رول دجاج مع صوص الرانش الغني والتركي المدخن وموتزاريلا محمرة بالفرن",
     basePrice: 180,
     image: "/menu_items/rolls/roll-chicken-ranch.jpeg",
@@ -1763,7 +1763,7 @@ export const initialMenuItems: MenuItem[] = [
   {
     id: "roll-shish",
     category: "rolls",
-    nameAr: "وش رول شيش",
+    nameAr: "وتش رول شيش",
     descAr: "رول محشو بقطع الشيش طاووق المشوي عالفحم والموتزاريلا وش بيتزا",
     basePrice: 180,
     image: "/menu_items/rolls/roll-shish.jpeg",
@@ -1773,7 +1773,7 @@ export const initialMenuItems: MenuItem[] = [
   {
     id: "roll-zinger",
     category: "rolls",
-    nameAr: "وش رول زنجر",
+    nameAr: "وتش رول زنجر",
     descAr: "رول محشو بدجاج زنجر الحار المقرمش مع الصوصات وشيدر وموتزاريلا",
     basePrice: 180,
     image: "/menu_items/rolls/roll-zinger.jpeg",
@@ -1784,7 +1784,7 @@ export const initialMenuItems: MenuItem[] = [
   {
     id: "roll-mix-chicken",
     category: "rolls",
-    nameAr: "وش رول ميكس فراخ",
+    nameAr: "وتش رول ميكس فراخ",
     descAr: "رول محشو بمكس دجاج فاخر (شيش + زنجر + استربس) مع موتزاريلا وش بيتزا",
     basePrice: 190,
     image: "/menu_items/rolls/roll-mix-chicken.jpeg",
