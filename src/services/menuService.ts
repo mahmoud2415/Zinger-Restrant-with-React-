@@ -12,8 +12,8 @@ import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v11';
-const DEALS_STORAGE_KEY = 'zinger_local_deals_v11';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v12';
+const DEALS_STORAGE_KEY = 'zinger_local_deals_v12';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
 const initialImageMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
@@ -21,7 +21,7 @@ const initialImageMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
 /**
  * Resolves the final image URL for a menu item.
  * Guarantees that the new official high-res generated images always take priority over legacy static paths,
- * while preserving any custom admin uploaded images (base64 data URLs or cloud storage URLs).
+ * while preserving any custom admin uploaded images (base64 data URLs or cloud storage URLs) or valid new menu paths.
  */
 export function resolveItemImage(itemId: string, currentImage?: string): string {
   const freshImg = initialImageMap.get(itemId);
@@ -45,12 +45,12 @@ export function resolveItemImage(itemId: string, currentImage?: string): string 
     return currentImage;
   }
 
-  // If the stored path is already identical to the latest fresh image path, use it
-  if (currentImage === freshImg) {
-    return freshImg;
+  // If the stored path is already a valid new /menu_items/ path, use it!
+  if (currentImage.startsWith('/menu_items/')) {
+    return currentImage;
   }
 
-  // For any legacy or old static path (e.g. /assets/menu/..., /assets/pasta-clean.jpg, حووشي.jpg, /menu_items/كريب..., etc.),
+  // For any legacy or old static path (e.g. /assets/menu/..., /assets/pasta-clean.jpg, حووشي.jpg, sfda.jpg, etc.),
   // ALWAYS upgrade to the latest official high-resolution image!
   return freshImg;
 }
@@ -218,11 +218,11 @@ export async function saveMenuItem(item: MenuItem): Promise<void> {
   }
   saveLocalMenuItems(updated);
 
-  // Sync to Firestore
+  // Sync to Firestore without partial merge so deleted fields (e.g. badge, removed sizes) are completely removed!
   try {
     const itemRef = doc(db, 'menu_items', item.id);
     await withFirebaseTimeout(
-      setDoc(itemRef, removeUndefined(item), { merge: true }),
+      setDoc(itemRef, removeUndefined(item)),
       'انتهت مهلة حفظ المنتج. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
     );
   } catch (e) {
@@ -270,7 +270,7 @@ export async function syncAllMenuItemsToFirestore(items: MenuItem[] = initialMen
   const batch = writeBatch(db);
   for (const item of items) {
     const itemRef = doc(db, 'menu_items', item.id);
-    batch.set(itemRef, removeUndefined(item), { merge: true });
+    batch.set(itemRef, removeUndefined(item));
   }
   await batch.commit();
   saveLocalMenuItems(items);
@@ -295,7 +295,7 @@ export async function saveDeal(deal: Deal): Promise<void> {
   try {
     const dealRef = doc(db, 'deals', deal.id);
     await withFirebaseTimeout(
-      setDoc(dealRef, removeUndefined(deal), { merge: true }),
+      setDoc(dealRef, removeUndefined(deal)),
       'انتهت مهلة حفظ العرض. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
     );
   } catch (e) {
