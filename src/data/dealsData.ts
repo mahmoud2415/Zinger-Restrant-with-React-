@@ -8,44 +8,4 @@ export function getDealImage(deal: Deal, menuItems: MenuItem[] = []): string {
   return deal.image;
 }
 
-export const initialDeals: Deal[] = [
-  {
-    id: "deal-1",
-    titleAr: "عرض ميجا زنجر كومبو الأسطوري",
-    descAr: "ساندوتش زنجر دبل سوبر كرانشي + بطاطس مقلية + كانز بيبسي مثلج + صوص شيدر سايح",
-    badge: "خصم 25% 🔥",
-    price: 165,
-    originalPrice: 220,
-    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80",
-    code: "ZINGER25",
-    showInBanner: true,
-    allowSpice: true,
-    isActive: true,
-  },
-  {
-    id: "deal-2",
-    titleAr: "بوكس التوفير تريبل بيف برجر",
-    descAr: "3 ساندوتشات برجر لحم بلدي مشوي عالفحم مع صوص سموكي شيدر وخيار مخلل + لتر بيبسي",
-    badge: "الأكثر طلباً ⭐",
-    price: 290,
-    originalPrice: 370,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200&auto=format&fit=crop&q=80",
-    code: "SMASH3",
-    showInBanner: true,
-    allowSpice: true,
-    isActive: true,
-  },
-  {
-    id: "deal-3",
-    titleAr: "عرض دويتو الكريب والبيتزا",
-    descAr: "1 كريب سوبر كرانشي دجاج + 1 بيتزا تشيكن باربيكيو وسط + 2 كانز بيبسي",
-    badge: "عرض التوفير المميز",
-    price: 240,
-    originalPrice: 310,
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop&q=80",
-    code: "DUO30",
-    showInBanner: true,
-    allowSpice: true,
-    isActive: true,
-  },
-];
+export const initialDeals: Deal[] = [];

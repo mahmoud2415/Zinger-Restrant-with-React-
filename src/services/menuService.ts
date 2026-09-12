@@ -10,7 +10,6 @@ import {
 import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
-import { initialDeals } from '../data/dealsData';
 
 const MENU_STORAGE_KEY = 'zinger_local_menu_items_v12';
 const DEALS_STORAGE_KEY = 'zinger_local_deals_v12';
@@ -106,14 +105,14 @@ export function getLocalDeals(): Deal[] {
     const saved = localStorage.getItem(DEALS_STORAGE_KEY);
     if (saved) {
       const deals = JSON.parse(saved) as Deal[];
-      if (Array.isArray(deals) && deals.length > 0) {
+      if (Array.isArray(deals)) {
         return deals;
       }
     }
   } catch (e) {
     console.warn('Error reading local deals', e);
   }
-  return initialDeals;
+  return [];
 }
 
 export function saveLocalDeals(deals: Deal[]) {
@@ -172,6 +171,7 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
 
 /**
  * Subscribe to Deals (Firestore with instant LocalStorage fallback)
+ * 100% Admin & Firestore live data without any demo/generic fallbacks.
  */
 export function subscribeToDeals(callback: (deals: Deal[]) => void): () => void {
   callback(getLocalDeals());
@@ -181,14 +181,12 @@ export function subscribeToDeals(callback: (deals: Deal[]) => void): () => void 
     const unsubscribe = onSnapshot(
       dealsCol,
       (snapshot) => {
-        if (!snapshot.empty) {
-          const deals: Deal[] = [];
-          snapshot.forEach((docSnap) => {
-            deals.push({ id: docSnap.id, ...(docSnap.data() as Omit<Deal, 'id'>) });
-          });
-          saveLocalDeals(deals);
-          callback(deals);
-        }
+        const deals: Deal[] = [];
+        snapshot.forEach((docSnap) => {
+          deals.push({ id: docSnap.id, ...(docSnap.data() as Omit<Deal, 'id'>) });
+        });
+        saveLocalDeals(deals);
+        callback(deals);
       },
       (error) => {
         console.info('Firestore deals offline/unconfigured, using local cache:', error.message);

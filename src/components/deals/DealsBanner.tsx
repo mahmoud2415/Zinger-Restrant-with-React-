@@ -73,10 +73,6 @@ export const DealsBanner: React.FC<DealsBannerProps> = ({ deals, onOpenDeals }) 
           src={currentDeal.image}
           alt={currentDeal.titleAr}
           className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.02] animate-fade-in"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80';
-          }}
         />
 
         {/* Carousel Navigation Arrows (Desktop / Hover only) */}
