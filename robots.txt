@@ -1,6 +1,7 @@
-# robots.txt for Zinger Restaurant (مطعم زنجر)
+# robots.txt for Zinger Restaurant (مطعم زينجر)
 User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://zingerrestrant.vercel.app/sitemap.xml
+Sitemap: https://www.zingerfood.com/sitemap.xml
+

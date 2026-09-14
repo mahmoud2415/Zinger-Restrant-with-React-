@@ -1,17 +1,18 @@
 {
-  "name": "مطعم زنجر - Zinger",
-  "short_name": "Zinger",
-  "description": "أقوى طعم زنجر في العريش - اطلب أونلاين عبر واتساب",
-  "start_url": "./index.html",
+  "name": "مطعم زينجر - Zinger Restaurant",
+  "short_name": "زينجر",
+  "description": "المنيو الرسمي لمطعم زينجر - اطلب أونلاين برجر وكريب وبيتزا وباستا من فروع الإسماعيلية وفاقوس وأبو كبير عبر واتساب",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#131313",
-  "theme_color": "#ff5625",
+  "theme_color": "#FFD000",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuBaIIiE8tVUO_dYVtQMBUGb92tppSs4AmrKTa3NT_NU1esh1T0zc0_R8h8j5vcrGv6PVqg-JfZe8KLdHRKBB7ZeoHto5d435a0IG4QoIXhdVyoFMB_HhAv7XGZgj1orR1zFOw5_SmtnEdwDP5aO7S8NTsYFosxeoGe65ub4j5dAsS9xHZxDbG_zfAjR-bz6Q8kaY900OxJqJENWhHFlF_7fNmhGXwfU0jI9wNR8R_vJ5VNFKWkniogR7ddrR0IPYFgV6h_w72ghANA",
+      "src": "/screen.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
