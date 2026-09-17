@@ -10,7 +10,7 @@ CATEGORIES = [
     ("burgers.jpeg", "برجر لحم"),
     ("crispy_chicken.jpeg", "ساندوتشات كرانشي"),
     ("crepes.jpeg", "كريب زينجر"),
-    ("pizza.jpeg", "بيتزا إيطالي"),
+    ("pizza.jpeg", "بيتزا أمريكي"),
     ("pasta.jpeg", "طواجن باستا"),
     ("rolls.jpeg", "وتش رول"),
     ("hawawshi.jpeg", "حواوشي إيطالي"),
