@@ -27,11 +27,11 @@ export const categories: Category[] = [
   },
   {
     id: "pizza",
-    nameEn: "ITALIAN PIZZA",
-    nameAr: "بيتزا إيطالي",
+    nameEn: "AMERICAN PIZZA",
+    nameAr: "بيتزا أمريكي",
     icon: "Pizza",
     coverImage: "/covers/pizza.jpeg",
-    descAr: "عجينة إيطالية هشة مع تشيكن باربيكيو وبيبيروني وميكس جبن",
+    descAr: "عجينة أمريكية هشة مع تشيكن باربيكيو وبيبيروني وميكس جبن",
   },
   {
     id: "pasta",
