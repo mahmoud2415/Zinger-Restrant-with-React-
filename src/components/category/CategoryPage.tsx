@@ -91,8 +91,8 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
           </span>
         </div>
 
-        {/* Grid of Food Items */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* Grid of Food Items (Single column on mobile, 2-3 columns on tablet/desktop) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {items.map((item) => (
             <FoodCard
               key={item.id}

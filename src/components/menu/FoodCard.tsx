@@ -51,10 +51,10 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
     <div
       id={`item-${item.id}`}
       onClick={handleCardClick}
-      className="group relative rounded-2xl bg-zinger-card border border-zinger-border hover:border-zinger-yellow/50 transition-all duration-300 overflow-hidden flex flex-col justify-between food-card-shadow cursor-pointer select-none"
+      className="group relative rounded-2xl bg-zinger-card border border-zinger-border hover:border-zinger-yellow/50 transition-all duration-300 overflow-hidden flex flex-row items-stretch p-3 gap-3.5 food-card-shadow cursor-pointer select-none"
     >
-      {/* Top Image & Badges */}
-      <div className="relative aspect-[16/11] w-full bg-zinc-950 overflow-hidden">
+      {/* 1. Right Side: Image & Badges & Share (first child in RTL = right) */}
+      <div className="relative w-28 h-28 sm:w-32 sm:h-32 aspect-square rounded-xl bg-zinc-950 overflow-hidden shrink-0 self-center">
         <img
           src={item.image}
           alt={item.nameAr}
@@ -66,43 +66,46 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
           }}
         />
 
-        {/* Top Badges */}
-        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-1.5 z-10">
-          {item.badge ? (
-            <span className="px-2 py-0.5 rounded-full bg-zinger-yellow text-black font-heading font-black text-[10px] tracking-wider uppercase shadow-glow-yellow-sm flex items-center gap-1">
-              {item.badge === 'HOT' && <Flame className="w-3 h-3 fill-black text-black" />}
-              {item.badge === 'BESTSELLER' && <Sparkles className="w-3 h-3 text-black" />}
-              {item.badge}
-            </span>
-          ) : (
-            <span />
-          )}
+        {/* Badge Overlay */}
+        {item.badge && (
+          <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-md bg-zinger-yellow text-black font-heading font-black text-[9px] tracking-wider uppercase shadow-glow-yellow-sm flex items-center gap-0.5 z-10">
+            {item.badge === 'HOT' && <Flame className="w-2.5 h-2.5 fill-black text-black" />}
+            {item.badge === 'BESTSELLER' && <Sparkles className="w-2.5 h-2.5 text-black" />}
+            {item.badge}
+          </span>
+        )}
 
-          {/* Share Button */}
-          <button
-            onClick={handleShareItem}
-            title="Share Meal"
-            className="p-1.5 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md border border-white/15 text-zinc-200 hover:text-zinger-yellow transition-all active:scale-90"
-          >
-            <Share2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        {/* Share Button */}
+        <button
+          onClick={handleShareItem}
+          title="مشاركة الوجبة"
+          className="absolute bottom-1.5 left-1.5 p-1.5 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md border border-white/15 text-zinc-200 hover:text-zinger-yellow transition-all active:scale-90 z-10"
+        >
+          <Share2 className="w-3 h-3" />
+        </button>
       </div>
 
-      {/* Content & Details */}
-      <div className="p-3.5 flex flex-col flex-1 justify-between gap-3">
+      {/* 2. Left Side: Meal Details, Description, Price & Actions */}
+      <div className="flex flex-col justify-between flex-1 min-w-0 py-0.5">
         <div>
-          {/* Title: Arabic Only in Strong Font */}
-          <h3 className="font-cairo font-black text-sm sm:text-base text-white line-clamp-1">
+          {/* Item Title */}
+          <h3 className="font-cairo font-black text-sm sm:text-base text-white line-clamp-1 leading-snug group-hover:text-zinger-yellow transition-colors">
             {item.nameAr}
           </h3>
+
+          {/* Item Ingredients / Description */}
+          {item.descAr && (
+            <p className="text-xs text-zinc-400 font-cairo line-clamp-2 leading-relaxed mt-1">
+              {item.descAr}
+            </p>
+          )}
         </div>
 
         {/* Bottom Price & Action */}
-        <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-zinc-800/80 mt-auto">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-zinc-800/60 mt-2">
           {/* Price */}
           <div className="flex items-baseline gap-1">
-            <span className="font-heading font-black text-lg sm:text-xl text-zinger-yellow">
+            <span className="font-heading font-black text-base sm:text-lg text-zinger-yellow">
               {item.basePrice}
             </span>
             <span className="text-[10px] sm:text-xs font-bold text-zinc-400 font-cairo">ج.م</span>
@@ -111,7 +114,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenCustomizer }) =>
           {/* Action Button: Plus Icon */}
           <button
             onClick={handleQuickAdd}
-            title="Add / Customize Meal"
+            title="إضافة / تخصيص الوجبة"
             className="w-8 h-8 rounded-full bg-zinger-yellow hover:bg-zinger-yellowHover text-black flex items-center justify-center shadow-glow-yellow-sm active:scale-90 transition-all font-black shrink-0"
           >
             <Plus className="w-4 h-4 stroke-[3]" />

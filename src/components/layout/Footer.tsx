@@ -133,9 +133,23 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. Copyright */}
-        <div className="pt-2 border-t border-zinc-900/60 text-[11px] text-zinc-600 font-mono">
+        {/* 4. Copyright & Developer Credits */}
+        <div className="pt-4 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500 font-cairo">
           <p>© {new Date().getFullYear()} ZINGER RESTAURANT. ALL RIGHTS RESERVED.</p>
+
+          <div className="flex items-center gap-2">
+            <span className="text-zinc-400">تطوير:</span>
+            <a
+              href={`https://wa.me/201020805451?text=${encodeURIComponent('انا جايلك من ويب سايت زينجر')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/50 text-zinc-200 hover:text-emerald-400 font-bold transition-all active:scale-95 shadow-sm"
+              title="تواصل مع المطور عبر واتساب"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+              <span>م/ محمود عبدالمعطي</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>

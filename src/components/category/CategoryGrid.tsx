@@ -15,13 +15,10 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
 }) => {
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-5 bg-zinger-yellow rounded-full inline-block shadow-glow-yellow-sm" />
-          <h2 className="font-heading font-black text-lg sm:text-xl text-white uppercase tracking-tight">
-            MENU CATEGORIES
-          </h2>
-        </div>
+      <div className="flex items-center justify-center border-b border-zinc-800 pb-2.5">
+        <h2 className="font-cairo font-black text-xl sm:text-2xl text-zinger-yellow flex items-center justify-center gap-2">
+          <span>أقسام المنيو</span>
+        </h2>
       </div>
 
       {/* Grid of Visual Category Covers */}
