@@ -128,7 +128,7 @@ const MainApp: React.FC = () => {
             sizes: d.sizes,
             allowSpice: d.allowSpice ?? true,
             isAvailable: d.isActive,
-            badge: (d.badge as any) || 'HOT',
+            badge: d.badge as any,
           }))[0]
       : null;
 

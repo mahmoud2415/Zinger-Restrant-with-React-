@@ -446,11 +446,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 font-bold uppercase">
-                          {categories.find((c) => c.id === item.category)?.nameAr || item.category}
-                        </span>
+                        <div className="flex items-center gap-1.5 overflow-hidden">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 font-bold uppercase truncate">
+                            {categories.find((c) => c.id === item.category)?.nameAr || item.category}
+                          </span>
+                          {item.badge && (
+                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinger-yellow text-black font-black uppercase shrink-0">
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
 
-                        <span className="font-heading font-black text-sm text-zinger-yellow">
+                        <span className="font-heading font-black text-sm text-zinger-yellow shrink-0">
                           {item.basePrice} ج.م
                         </span>
                       </div>
