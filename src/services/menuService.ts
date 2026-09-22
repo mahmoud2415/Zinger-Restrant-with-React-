@@ -12,41 +12,9 @@ import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v14';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v15';
 const DEALS_STORAGE_KEY = 'zinger_local_deals_v12';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
-
-// The 28 items that had legacy hardcoded badges
-const LEGACY_DEFAULT_BADGE_IDS = new Set([
-  'classic-beef-burger',
-  'cheese-free-beef-burger',
-  'cordon-bleu-beef-burger',
-  'crispy-chicken-super-zinger',
-  'crispy-chicken-chili-fire',
-  'crepe-super-zinger',
-  'crepe-crispy-chicken-ranch',
-  'crepe-cordon-bleu',
-  'crepe-burger',
-  'crepe-mix-cheese',
-  'crepe-chicken-bbq',
-  'crepe-chicken-nacho',
-  'crepe-chicken-jalapeno',
-  'crepe-shish-tawook',
-  'crepe-chicken-strips',
-  'crepe-meat-shawarma',
-  'pizza-chicken-ranch',
-  'pizza-chicken-bbq',
-  'pizza-pepperoni',
-  'pizza-mix-cheese',
-  'pizza-zinger-supreme',
-  'pasta-negresco-chicken',
-  'pasta-fettuccine-chicken',
-  'pasta-quattro-formaggi',
-  'roll-super-zinger',
-  'roll-cordon-bleu',
-  'hawawshi-italian-mix-meat',
-  'melted-cheese-pot-zinger',
-]);
 
 const initialImageMap = new Map(initialMenuItems.map((i) => [i.id, i.image]));
 
@@ -180,17 +148,16 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
               updateDoc(docSnap.ref, { image: resolvedImage }).catch(() => {});
             }
 
-            // Self-heal & wipe out old legacy default badges from Firestore
-            let itemBadge = data.badge;
-            const isLegacyItem = LEGACY_DEFAULT_BADGE_IDS.has(docSnap.id);
-            const userExplicitBadge = localStorage.getItem(`user_custom_badge_${docSnap.id}`);
+            // Self-heal & wipe out all legacy badges from Firestore
+            let itemBadge: MenuItem['badge'] = undefined;
+            const isExplicitCustomBadge = (data as any).isCustomBadge === true || !!localStorage.getItem(`user_custom_badge_${docSnap.id}`);
 
-            if (isLegacyItem && data.badge && !userExplicitBadge) {
-              // Delete old hardcoded badge from Firestore in cloud
+            if (data.badge && !isExplicitCustomBadge) {
+              // Wipe old legacy badge from Firestore in cloud
               itemBadge = undefined;
-              updateDoc(docSnap.ref, { badge: deleteField() }).catch(() => {});
-            } else if (userExplicitBadge) {
-              itemBadge = userExplicitBadge as any;
+              updateDoc(docSnap.ref, { badge: deleteField(), isCustomBadge: deleteField() }).catch(() => {});
+            } else if (isExplicitCustomBadge && (data.badge || localStorage.getItem(`user_custom_badge_${docSnap.id}`))) {
+              itemBadge = (data.badge || localStorage.getItem(`user_custom_badge_${docSnap.id}`)) as any;
             }
 
             items.push({ 
@@ -255,6 +222,11 @@ export function subscribeToDeals(callback: (deals: Deal[]) => void): () => void 
  * Add or Update Menu Item
  */
 export async function saveMenuItem(item: MenuItem): Promise<void> {
+  const itemWithFlag = {
+    ...item,
+    isCustomBadge: item.badge ? true : undefined,
+  };
+
   // Explicitly remember user badge choice
   if (item.badge) {
     localStorage.setItem(`user_custom_badge_${item.id}`, item.badge);
@@ -278,7 +250,7 @@ export async function saveMenuItem(item: MenuItem): Promise<void> {
   try {
     const itemRef = doc(db, 'menu_items', item.id);
     await withFirebaseTimeout(
-      setDoc(itemRef, removeUndefined(item)),
+      setDoc(itemRef, removeUndefined(itemWithFlag)),
       'انتهت مهلة حفظ المنتج. تحقق من اتصال الإنترنت وصلاحيات Firebase.',
     );
   } catch (e) {
