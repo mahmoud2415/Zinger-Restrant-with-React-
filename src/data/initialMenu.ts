@@ -13,7 +13,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/burgers/classic.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "سنجل (200جم)", price: 180 },
       { nameAr: "دبل (400جم)", price: 235 },
@@ -29,7 +28,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/burgers/jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "سنجل (200جم)", price: 180 },
       { nameAr: "دبل (400جم)", price: 235 },
@@ -60,7 +58,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/burgers/super_night.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "CHEF PICK",
     sizes: [
       { nameAr: "سنجل (200جم)", price: 180 },
       { nameAr: "دبل (400جم)", price: 235 },
@@ -104,7 +101,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crispy_chicken/chicken_smoked_turkey.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "سنجل", price: 160 },
       { nameAr: "دبل", price: 210 },
@@ -165,7 +161,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crispy_chicken/chicken_nachos.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "سنجل", price: 200 },
       { nameAr: "دبل", price: 250 },
@@ -363,7 +358,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-chicken-bbq.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 160 },
       { nameAr: "كبير (L)", price: 190 },
@@ -409,7 +403,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-chicken-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 160 },
       { nameAr: "كبير (L)", price: 190 },
@@ -530,7 +523,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-zinger.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 160 },
       { nameAr: "كبير (L)", price: 190 },
@@ -606,7 +598,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-chicken-jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 165 },
       { nameAr: "كبير (L)", price: 195 },
@@ -682,7 +673,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-sea-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "CHEF PICK",
     sizes: [
       { nameAr: "وسط (M)", price: 205 },
       { nameAr: "كبير (L)", price: 235 },
@@ -728,7 +718,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-nashville.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 170 },
       { nameAr: "كبير (L)", price: 200 },
@@ -744,7 +733,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pizza/pizza-meter.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "SUPER CRUNCHY",
   },
   {
     id: "pizza-pastrami-kiri",
@@ -850,7 +838,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-super-crunchy.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 140 },
       { nameAr: "كبير (L)", price: 155 },
@@ -899,7 +886,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-chicken-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 145 },
       { nameAr: "كبير (L)", price: 155 },
@@ -916,7 +902,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-chicken-jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 145 },
       { nameAr: "كبير (L)", price: 160 },
@@ -1029,7 +1014,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-zinger-special.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "CHEF PICK",
     sizes: [
       { nameAr: "إكس لارج (XL)", price: 190 },
       { nameAr: "رول (Roll)", price: 205 },
@@ -1220,7 +1204,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-crispy-shrimp.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "CHEF PICK",
     sizes: [
       { nameAr: "إكس لارج (XL)", price: 230 },
     ],
@@ -1330,7 +1313,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-happiness.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 195 },
       { nameAr: "كبير (L)", price: 215 },
@@ -1347,7 +1329,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-dynamite.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 170 },
       { nameAr: "كبير (L)", price: 185 },
@@ -1428,7 +1409,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crepes/crepe-fantasy.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "CHEF PICK",
     sizes: [
       { nameAr: "وسط (M)", price: 185 },
       { nameAr: "كبير (L)", price: 215 },
@@ -1494,7 +1474,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pasta/pasta-chicken-ranch.jpeg",
     allowSpice: false,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 175 },
       { nameAr: "كبير (L)", price: 205 },
@@ -1615,7 +1594,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/pasta/pasta-chicken-jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 175 },
       { nameAr: "كبير (L)", price: 205 },
@@ -1779,7 +1757,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/rolls/roll-zinger.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
   },
   {
     id: "roll-mix-chicken",
@@ -1790,7 +1767,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/rolls/roll-mix-chicken.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "BESTSELLER",
   },
 
   // ==========================================
@@ -1925,7 +1901,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/melted_cheese/cheese-pan-chicken-jalapeno.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "HOT",
     sizes: [
       { nameAr: "وسط (M)", price: 160 },
       { nameAr: "كبير (L)", price: 175 },
@@ -1954,7 +1929,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/melted_cheese/cheese-pan-zinger-shish.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "BESTSELLER",
     sizes: [
       { nameAr: "وسط (M)", price: 175 },
       { nameAr: "كبير (L)", price: 195 },
@@ -1987,7 +1961,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crispy_chicken/bomb_chicken_turkey.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "BESTSELLER",
   },
   {
     id: "bomb-shish-charcoal",
@@ -2008,7 +1981,6 @@ export const initialMenuItems: MenuItem[] = [
     image: "/menu_items/crispy_chicken/bomb-mix-chicken.jpeg",
     allowSpice: true,
     isAvailable: true,
-    badge: "CHEF PICK",
   },
   {
     id: "bomb-baladi-burger",

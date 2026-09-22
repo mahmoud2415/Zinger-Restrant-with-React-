@@ -11,7 +11,7 @@ import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 
-const MENU_STORAGE_KEY = 'zinger_local_menu_items_v12';
+const MENU_STORAGE_KEY = 'zinger_local_menu_items_v13';
 const DEALS_STORAGE_KEY = 'zinger_local_deals_v12';
 const FIREBASE_OPERATION_TIMEOUT = 30000;
 
