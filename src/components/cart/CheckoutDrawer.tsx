@@ -277,7 +277,7 @@ export const CheckoutDrawer: React.FC = () => {
                     }`}
                   >
                     <Store className="w-4 h-4" />
-                    <span>استلام من المطعم</span>
+                    <span>صالة</span>
                   </button>
                 </div>
               </div>

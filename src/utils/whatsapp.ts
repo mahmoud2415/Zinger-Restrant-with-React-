@@ -13,7 +13,7 @@ export function buildWhatsAppMessage(
   msg += `📍 *الفرع المختار:* ${branchName}\n`;
   msg += `👤 *اسم العميل:* ${customer.name || 'عميل زينجر'}\n`;
   msg += `📞 *رقم الجوال:* ${customer.phone}\n`;
-  msg += `🛵 *نوع الطلب:* ${orderType === 'delivery' ? 'توصيل للمنزل (Delivery)' : 'استلام من المطعم (Pickup)'}\n`;
+  msg += `🛵 *نوع الطلب:* ${orderType === 'delivery' ? 'توصيل للمنزل (Delivery)' : 'طلب صالة (Dine-in)'}\n`;
 
   if (orderType === 'delivery' && customer.address) {
     msg += `🏠 *العنوان بالتفصيل:* ${customer.address}\n`;
@@ -44,7 +44,10 @@ export function buildWhatsAppMessage(
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `💰 *الإجمالي النهائي:* *${subtotal} جنيه مصري*\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  msg += `شكراً لطلبك من مطعم زينجر! ❤️🍔\n_ZINGER Restaurant_`;
+  msg += `شكراً لطلبك من مطعم زينجر! ❤️🍔\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `تصفح منيو مطعم زينجر واطلب أشهى برجر، كريب، بيتزا وباستا أونلاين بضغطة زر! 🔥\n`;
+  msg += `https://www.zingerfood.com/`;
 
   return encodeURIComponent(msg);
 }
