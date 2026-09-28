@@ -14,6 +14,8 @@ export const DealsShowcaseCard: React.FC<DealsShowcaseCardProps> = ({
   const activeDeals = deals.filter((d) => d.isActive);
   const dealsCount = activeDeals.length;
 
+  if (dealsCount === 0) return null;
+
   return (
     <div
       onClick={onOpenDeals}
