@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MenuItem, Deal, AdminUser } from './types';
 import { categories } from './data/categories';
 import { getDealImage } from './data/dealsData';
-import { subscribeToMenuItems, subscribeToDeals } from './services/menuService';
+import { subscribeToMenuItems, subscribeToDeals, getLocalMenuItems, getLocalDeals } from './services/menuService';
 import { subscribeToAuth } from './services/authService';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext';
@@ -45,8 +45,8 @@ function parseHash(): ViewState {
 }
 
 const MainApp: React.FC = () => {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [deals, setDeals] = useState<Deal[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => getLocalMenuItems());
+  const [deals, setDeals] = useState<Deal[]>(() => getLocalDeals());
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
 
   // Hash-based Page Navigation State (Synchronized with Phone Hardware Back Button)

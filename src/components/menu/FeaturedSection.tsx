@@ -13,9 +13,32 @@ export const FeaturedSection: React.FC<FeaturedSectionProps> = ({
   onOpenProduct,
 }) => {
   // Filter only items with badges (Bestsellers / Hot / Chef Pick)
-  const featured = items
+  let featured = items
     .filter((i) => i.badge && i.category !== 'extras')
     .slice(0, 6);
+
+  // If no items have custom badges yet, showcase the flagship signature items instantly
+  if (featured.length === 0 && items.length > 0) {
+    const signatureIds = [
+      'burger-classic',
+      'chicken-smoked-turkey',
+      'crepe-super-crunchy',
+      'pizza-chicken-bbq',
+      'pasta-chicken-ranch',
+      'roll-zinger',
+    ];
+    featured = signatureIds
+      .map((id) => items.find((it) => it.id === id))
+      .filter((it): it is MenuItem => Boolean(it));
+
+    // If still less than 6, supplement from top available items
+    if (featured.length < 6) {
+      const remaining = items.filter(
+        (i) => i.category !== 'extras' && !featured.some((f) => f.id === i.id)
+      ).slice(0, 6 - featured.length);
+      featured = [...featured, ...remaining];
+    }
+  }
 
   if (featured.length === 0) return null;
 

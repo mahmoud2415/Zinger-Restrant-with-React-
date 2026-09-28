@@ -5,12 +5,12 @@ import {
   setDoc, 
   deleteDoc, 
   updateDoc,
-  deleteField,
   writeBatch
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
+import { initialDeals } from '../data/dealsData';
 
 const MENU_STORAGE_KEY = 'zinger_local_menu_items_v15';
 const DEALS_STORAGE_KEY = 'zinger_local_deals_v12';
@@ -106,14 +106,14 @@ export function getLocalDeals(): Deal[] {
     const saved = localStorage.getItem(DEALS_STORAGE_KEY);
     if (saved) {
       const deals = JSON.parse(saved) as Deal[];
-      if (Array.isArray(deals)) {
+      if (Array.isArray(deals) && deals.length > 0) {
         return deals;
       }
     }
   } catch (e) {
     console.warn('Error reading local deals', e);
   }
-  return [];
+  return initialDeals;
 }
 
 export function saveLocalDeals(deals: Deal[]) {
@@ -148,22 +148,10 @@ export function subscribeToMenuItems(callback: (items: MenuItem[]) => void): () 
               updateDoc(docSnap.ref, { image: resolvedImage }).catch(() => {});
             }
 
-            // Self-heal & wipe out all legacy badges from Firestore
-            let itemBadge: MenuItem['badge'] = undefined;
-            const isExplicitCustomBadge = (data as any).isCustomBadge === true || !!localStorage.getItem(`user_custom_badge_${docSnap.id}`);
-
-            if (data.badge && !isExplicitCustomBadge) {
-              // Wipe old legacy badge from Firestore in cloud
-              itemBadge = undefined;
-              updateDoc(docSnap.ref, { badge: deleteField(), isCustomBadge: deleteField() }).catch(() => {});
-            } else if (isExplicitCustomBadge && (data.badge || localStorage.getItem(`user_custom_badge_${docSnap.id}`))) {
-              itemBadge = (data.badge || localStorage.getItem(`user_custom_badge_${docSnap.id}`)) as any;
-            }
-
             items.push({ 
               id: docSnap.id, 
               ...data, 
-              badge: itemBadge,
+              badge: data.badge,
               image: resolvedImage 
             });
           });
@@ -199,12 +187,17 @@ export function subscribeToDeals(callback: (deals: Deal[]) => void): () => void 
     const unsubscribe = onSnapshot(
       dealsCol,
       (snapshot) => {
-        const deals: Deal[] = [];
-        snapshot.forEach((docSnap) => {
-          deals.push({ id: docSnap.id, ...(docSnap.data() as Omit<Deal, 'id'>) });
-        });
-        saveLocalDeals(deals);
-        callback(deals);
+        if (!snapshot.empty) {
+          const deals: Deal[] = [];
+          snapshot.forEach((docSnap) => {
+            deals.push({ id: docSnap.id, ...(docSnap.data() as Omit<Deal, 'id'>) });
+          });
+          saveLocalDeals(deals);
+          callback(deals);
+        } else {
+          const local = getLocalDeals();
+          callback(local);
+        }
       },
       (error) => {
         console.info('Firestore deals offline/unconfigured, using local cache:', error.message);
