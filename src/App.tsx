@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { MenuItem, Deal, AdminUser } from './types';
 import { categories } from './data/categories';
 import { getDealImage } from './data/dealsData';
@@ -267,6 +268,7 @@ export default function App() {
     <ToastProvider>
       <CartProvider>
         <MainApp />
+        <Analytics />
       </CartProvider>
     </ToastProvider>
   );
