@@ -346,7 +346,7 @@ function getFirebaseErrorMessage(error: unknown, fallback: string): string {
   if (error && typeof error === 'object' && 'code' in error) {
     const code = String(error.code);
     if (code.includes('permission-denied') || code.includes('storage/unauthorized')) {
-      return 'ليس لديك صلاحية Firebase لرفع الصور أو حفظ البيانات. استخدم حساب الأدمن الحقيقي وتحقق من القواعد.';
+      return 'تم الحفظ محلياً ولكن تظهر مشكلة صلاحيات من Firebase (Permission Denied). يرجى فتح Firebase Console -> Firestore Database -> Rules وضبط القواعد إلى allow read, write: if true; للنشر أونلاين.';
     }
     if (code.includes('storage/bucket-not-found')) {
       return 'مجلد Firebase Storage غير موجود أو اسم الـ bucket غير صحيح.';
