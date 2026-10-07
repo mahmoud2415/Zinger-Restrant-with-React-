@@ -16,7 +16,9 @@ import {
   Upload, 
   ArrowLeft, 
   LogOut, 
-  Layers
+  Layers,
+  Cloud,
+  RefreshCw
 } from 'lucide-react';
 import { 
   saveMenuItem, 
@@ -25,6 +27,10 @@ import {
   deleteDeal, 
   uploadMealImage 
 } from '../../services/menuService';
+import { 
+  migrateBase64ImagesToCloudinary, 
+  getCloudinaryConfig 
+} from '../../services/cloudinaryService';
 import { logoutAdmin } from '../../services/authService';
 import { useToast } from '../../context/ToastContext';
 
@@ -62,6 +68,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [savingDeal, setSavingDeal] = useState(false);
   const [savingDealImage, setSavingDealImage] = useState(false);
   const [pendingDealImage, setPendingDealImage] = useState<File | null>(null);
+
+  // Cloudinary Migration State
+  const [isMigrating, setIsMigrating] = useState(false);
+
+  const handleMigrateCloudinary = async () => {
+    const config = getCloudinaryConfig();
+    if (!config) {
+      showToast(
+        'برجاء إضافة VITE_CLOUDINARY_CLOUD_NAME و VITE_CLOUDINARY_UPLOAD_PRESET في ملف .env أولاً',
+        'warning'
+      );
+      return;
+    }
+
+    setIsMigrating(true);
+    try {
+      const result = await migrateBase64ImagesToCloudinary((status) => {
+        showToast(status.message, status.current === status.total && status.total > 0 ? 'success' : 'info');
+      });
+      if (result.migratedCount > 0) {
+        showToast(`تم استبدال ${result.migratedCount} صورة بنجاح بروابط Cloudinary CDN!`, 'success');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'حدث خطأ أثناء رفع الصور إلى Cloudinary', 'warning');
+    } finally {
+      setIsMigrating(false);
+    }
+  };
 
   // Filtered Menu Items
   const filteredItems = menuItems.filter((item) => {
@@ -339,6 +373,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={handleMigrateCloudinary}
+              disabled={isMigrating}
+              title="استبدال صور Base64 بـ Cloudinary CDN"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-950/70 hover:bg-sky-900/80 border border-sky-800/50 text-xs text-sky-300 font-cairo font-bold transition-all active:scale-95 disabled:opacity-50"
+            >
+              {isMigrating ? (
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-sky-400" />
+              ) : (
+                <Cloud className="w-3.5 h-3.5 text-sky-400" />
+              )}
+              <span className="hidden sm:inline">
+                {isMigrating ? 'جاري التحويل...' : 'تحويل الصور لـ Cloudinary'}
+              </span>
+            </button>
+
             <button
               onClick={async () => {
                 await logoutAdmin();

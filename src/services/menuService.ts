@@ -11,6 +11,7 @@ import { db } from './firebase';
 import { MenuItem, Deal } from '../types';
 import { initialMenuItems } from '../data/initialMenu';
 import { initialDeals } from '../data/dealsData';
+import { uploadToCloudinary, getCloudinaryConfig } from './cloudinaryService';
 
 const MENU_STORAGE_KEY = 'zinger_local_menu_items_v15';
 const DEALS_STORAGE_KEY = 'zinger_local_deals_v12';
@@ -362,9 +363,15 @@ function getFirebaseErrorMessage(error: unknown, fallback: string): string {
  * Compress a selected image and return it as a Firestore-safe Data URL.
  */
 export async function uploadMealImage(file: File): Promise<string> {
+  const config = getCloudinaryConfig();
+  if (config) {
+    return await uploadToCloudinary(file, 'zinger_menu');
+  }
+
+  // Fallback to compressed Data URL if Cloudinary environment variables are not set yet
   const dataUrl = await compressImageToDataUrl(file);
   if (dataUrl.length > 900_000) {
-    throw new Error('الصورة كبيرة بعد الضغط. اختر صورة أصغر حجمًا.');
+    throw new Error('الصورة كبيرة بعد الضغط. قم بإعداد Cloudinary لرفع الصور بدون قيود.');
   }
   return dataUrl;
 }
